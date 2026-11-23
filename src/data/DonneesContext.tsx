@@ -8,7 +8,7 @@
  */
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Creneau, DonneesGlacier, Employe, Mouvement, Produit } from '../types';
+import type { Creneau, DonneesGlacier, Employe, Mouvement, Produit, Tache } from '../types';
 import { appliquerMouvement } from '../lib/stock';
 import { ajouterJours } from '../lib/dates';
 import { nouvelId } from '../lib/ids';
@@ -26,6 +26,10 @@ type Action =
   | { type: 'produit/enregistrer'; produit: Produit }
   | { type: 'produit/supprimer'; id: string }
   | { type: 'mouvement/ajouter'; mouvement: Mouvement }
+  | { type: 'tache/enregistrer'; tache: Tache }
+  | { type: 'tache/basculer'; id: string }
+  | { type: 'tache/supprimer'; id: string }
+  | { type: 'tache/supprimerFaites' }
   | { type: 'donnees/remplacer'; donnees: DonneesGlacier };
 
 /** Remplace l'élément de même id dans la liste, ou l'ajoute s'il est nouveau. */
@@ -87,6 +91,19 @@ function reducer(etat: DonneesGlacier, action: Action): DonneesGlacier {
         mouvements: [mouvement, ...etat.mouvements],
       };
     }
+
+    case 'tache/enregistrer':
+      return { ...etat, taches: remplacerOuAjouter(etat.taches, action.tache) };
+
+    case 'tache/basculer':
+      // Coche ou décoche « fait ».
+      return { ...etat, taches: etat.taches.map((t) => (t.id === action.id ? { ...t, faite: !t.faite } : t)) };
+
+    case 'tache/supprimer':
+      return { ...etat, taches: etat.taches.filter((t) => t.id !== action.id) };
+
+    case 'tache/supprimerFaites':
+      return { ...etat, taches: etat.taches.filter((t) => !t.faite) };
 
     case 'donnees/remplacer':
       return action.donnees;

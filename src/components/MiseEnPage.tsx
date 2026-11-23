@@ -15,6 +15,7 @@ const LIENS: { chemin: string; libelle: string; icone: NomIcone }[] = [
   { chemin: '/planning', libelle: 'Planning', icone: 'planning' },
   { chemin: '/stocks', libelle: 'Stocks', icone: 'stocks' },
   { chemin: '/employes', libelle: 'Employés', icone: 'employes' },
+  { chemin: '/taches', libelle: 'To do', icone: 'taches' },
   { chemin: '/parametres', libelle: 'Paramètres', icone: 'parametres' },
 ];
 

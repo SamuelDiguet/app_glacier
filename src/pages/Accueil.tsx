@@ -1,6 +1,6 @@
 /**
  * Page d'accueil : l'essentiel de la journée en un coup d'œil
- * (équipe du jour, alertes de stock, chiffres de la semaine).
+ * (équipe du jour, tâches du jour, alertes de stock, chiffres de la semaine).
  */
 import { Link } from 'react-router-dom';
 import type { Produit } from '../types';
@@ -9,6 +9,7 @@ import { Icone } from '../components/Icone';
 import { BadgePoste } from '../components/Badge';
 import { produitsEnAlerte } from '../lib/stock';
 import { heuresParEmploye, trierCreneaux } from '../lib/planning';
+import { tachesDuJour } from '../lib/taches';
 import { ajouterJours, aujourdhui, formaterHeures, formaterJourLong, lundiDeLaSemaine } from '../lib/dates';
 
 export function Accueil() {
@@ -19,6 +20,7 @@ export function Accueil() {
 
   const equipeDuJour = trierCreneaux(donnees.creneaux.filter((c) => c.date === jour));
   const alertes = produitsEnAlerte(donnees.produits);
+  const aFaire = tachesDuJour(donnees.taches, jour);
   const creneauxSemaine = donnees.creneaux.filter((c) => c.date >= lundi && c.date <= dimanche);
   const heuresSemaine = [...heuresParEmploye(creneauxSemaine).values()].reduce((a, b) => a + b, 0);
   const employesActifs = donnees.employes.filter((e) => e.actif).length;
@@ -68,6 +70,23 @@ export function Accueil() {
             </ul>
           )}
           <Link to="/planning" className="lien-suite">Voir le planning</Link>
+        </div>
+
+        <div className="carte bloc">
+          <h2>À faire aujourd'hui</h2>
+          {aFaire.length === 0 ? (
+            <p className="vide">Rien de prévu aujourd'hui.</p>
+          ) : (
+            <ul className="liste-simple">
+              {aFaire.map((t) => (
+                <li key={t.id} className={t.date < jour ? 'en-alerte' : ''}>
+                  <span>{t.titre}</span>
+                  <span>{t.date < jour ? 'En retard' : t.heure}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+          <Link to="/taches" className="lien-suite">Voir la liste To do</Link>
         </div>
 
         <div className="carte bloc">

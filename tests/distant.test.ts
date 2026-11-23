@@ -21,6 +21,7 @@ function depart(): DonneesGlacier {
     creneaux: [{ id: 'c1', employeId: 'e1', poste: 'vente', date: '2026-11-23', debut: '10:00', fin: '14:00', note: '' }],
     produits: [vanille],
     mouvements: [],
+    taches: [],
   };
 }
 

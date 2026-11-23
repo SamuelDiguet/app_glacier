@@ -3,7 +3,7 @@
  * l'application ne soit pas vide lors de la découverte. On peut tout
  * effacer depuis la page Paramètres.
  */
-import type { Creneau, DonneesGlacier, Employe, Poste, Produit } from '../types';
+import type { Creneau, DonneesGlacier, Employe, Poste, Produit, Tache } from '../types';
 import { ajouterJours, aujourdhui, lundiDeLaSemaine } from '../lib/dates';
 import { nouvelId } from '../lib/ids';
 import { VERSION_DONNEES } from './stockage';
@@ -71,5 +71,12 @@ export function donneesExemple(): DonneesGlacier {
     matiere('Cornets', 'Emballages', 'carton', 3, 2),
   ];
 
-  return { version: VERSION_DONNEES, employes, creneaux, produits, mouvements: [] };
+  // Quelques tâches et rendez-vous pour illustrer la liste « To do ».
+  const taches: Tache[] = [
+    { id: nouvelId(), titre: 'Livraison crème et lait', date: aujourdhui(), heure: '09:00', note: 'Fournisseur laitier, vérifier les dates.', faite: false },
+    { id: nouvelId(), titre: 'Rendez-vous comptable', date: ajouterJours(aujourdhui(), 3), heure: '14:30', note: '', faite: false },
+    { id: nouvelId(), titre: 'Commander des cornets', date: '', heure: '', note: '', faite: false },
+  ];
+
+  return { version: VERSION_DONNEES, employes, creneaux, produits, mouvements: [], taches };
 }

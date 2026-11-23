@@ -20,6 +20,7 @@ import { Planning } from './pages/Planning';
 import { Stocks } from './pages/Stocks';
 import { Employes } from './pages/Employes';
 import { Parametres } from './pages/Parametres';
+import { Taches } from './pages/Taches';
 import { Connexion } from './pages/Connexion';
 import { EcranChargement, NouveauMotDePasse } from './pages/AccesConnecte';
 
@@ -33,6 +34,7 @@ function Pages() {
           <Route path="planning" element={<Planning />} />
           <Route path="stocks" element={<Stocks />} />
           <Route path="employes" element={<Employes />} />
+          <Route path="taches" element={<Taches />} />
           <Route path="parametres" element={<Parametres />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>

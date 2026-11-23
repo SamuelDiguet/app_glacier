@@ -18,11 +18,11 @@ export const CLE_STOCKAGE = 'gestion-glacier:donnees';
 export const CLE_CACHE = 'gestion-glacier:cache';
 
 /** Version du format des données, à incrémenter en cas de changement de structure. */
-export const VERSION_DONNEES = 4;
+export const VERSION_DONNEES = 5;
 
 /** Données vides, utilisées au premier lancement ou après réinitialisation. */
 export function donneesVides(): DonneesGlacier {
-  return { version: VERSION_DONNEES, employes: [], creneaux: [], produits: [], mouvements: [] };
+  return { version: VERSION_DONNEES, employes: [], creneaux: [], produits: [], mouvements: [], taches: [] };
 }
 
 /**
@@ -41,7 +41,8 @@ export function estDonneesValides(valeur: unknown): valeur is DonneesGlacier {
  * - v1 → v2 : ajout de la famille des produits (les produits comptés en bacs
  *   deviennent des parfums, les autres des matières premières) ;
  * - v2 → v3 : le statut unique d'un employé devient une liste de statuts ;
- * - v3 → v4 : ajout de « majeur » (vrai par défaut) et des notes (vides).
+ * - v3 → v4 : ajout de « majeur » (vrai par défaut) et des notes (vides) ;
+ * - v4 → v5 : ajout de la liste « To do » (vide).
  */
 export function migrerDonnees(donnees: DonneesGlacier): DonneesGlacier {
   if (donnees.version >= VERSION_DONNEES) return donnees;
@@ -58,7 +59,7 @@ export function migrerDonnees(donnees: DonneesGlacier): DonneesGlacier {
       notes: e.notes ?? '',
     };
   });
-  return { ...donnees, version: VERSION_DONNEES, produits, employes };
+  return { ...donnees, version: VERSION_DONNEES, produits, employes, taches: donnees.taches ?? [] };
 }
 
 /** Lit les données sauvegardées, ou `null` s'il n'y en a pas (ou si elles sont illisibles). */
