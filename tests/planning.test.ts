@@ -11,7 +11,7 @@ const creneau = (champs: Partial<Creneau>): Creneau => ({
 });
 
 const ines: Employe = {
-  id: 'e1', prenom: 'Inès', nom: 'Petit', telephone: '', postes: ['vente'], statut: 'standard', actif: true,
+  id: 'e1', prenom: 'Inès', nom: 'Petit', telephone: '', postes: ['vente'], statuts: ['standard'], actif: true,
 };
 
 describe('planning', () => {

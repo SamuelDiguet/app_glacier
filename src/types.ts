@@ -19,7 +19,8 @@ export interface Employe {
   telephone: string;
   /** Postes que l'employé peut tenir (au moins un). */
   postes: Poste[];
-  statut: Statut;
+  /** Statuts de l'employé (au moins un, cumulables : ex. pâtissier et manager). */
+  statuts: Statut[];
   /** Un employé inactif n'est plus proposé dans les plannings. */
   actif: boolean;
 }

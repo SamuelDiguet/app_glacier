@@ -9,8 +9,8 @@ import { nouvelId } from '../lib/ids';
 import { VERSION_DONNEES } from './stockage';
 
 /** Construit un employé d'exemple. */
-function employe(prenom: string, nom: string, postes: Poste[], statut: Employe['statut']): Employe {
-  return { id: nouvelId(), prenom, nom, telephone: '', postes, statut, actif: true };
+function employe(prenom: string, nom: string, postes: Poste[], statuts: Employe['statuts']): Employe {
+  return { id: nouvelId(), prenom, nom, telephone: '', postes, statuts, actif: true };
 }
 
 /** Construit un parfum d'exemple, compté en bacs. */
@@ -26,10 +26,10 @@ function matiere(nom: string, categorie: string, unite: Produit['unite'], quanti
 /** Génère les données d'exemple, avec un planning sur la semaine en cours. */
 export function donneesExemple(): DonneesGlacier {
   const employes = [
-    employe('Camille', 'Martin', ['vente', 'production'], 'manager'),
-    employe('Lucas', 'Bernard', ['production'], 'patissier'),
-    employe('Inès', 'Petit', ['vente'], 'standard'),
-    employe('Hugo', 'Moreau', ['vente'], 'standard'),
+    employe('Camille', 'Martin', ['vente', 'production'], ['manager']),
+    employe('Lucas', 'Bernard', ['production'], ['patissier', 'manager']),
+    employe('Inès', 'Petit', ['vente'], ['standard']),
+    employe('Hugo', 'Moreau', ['vente'], ['standard']),
   ];
   const [camille, lucas, ines, hugo] = employes;
 

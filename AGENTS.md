@@ -25,7 +25,7 @@ Application de gestion pour un glacier : plannings, stocks et employés.
    - **Matières premières** : ingrédients et fournitures pour la production (Nutella, pâte de pistache, crème, sucre, cornets…), avec unité au choix (kg, L, pièce, carton) et alerte « à commander ».
 3. **Employés** : ajouter des employés et leur attribuer des postes.
    - **Postes** : vente, production.
-   - **Statuts** : standard, pâtissier, manager.
+   - **Statuts** : standard, pâtissier, manager — **cumulables** (un employé peut en avoir plusieurs, au moins un).
 
 ## Stack technique
 

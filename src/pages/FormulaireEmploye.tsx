@@ -2,7 +2,7 @@
  * Formulaire de création / modification d'un employé.
  */
 import { useState, type FormEvent } from 'react';
-import type { Employe, Poste } from '../types';
+import type { Employe, Poste, Statut } from '../types';
 import { LIBELLES_POSTE, LIBELLES_STATUT, POSTES, STATUTS } from '../lib/libelles';
 import { nouvelId } from '../lib/ids';
 
@@ -15,7 +15,12 @@ interface Props {
 
 /** Valeurs par défaut d'un nouvel employé. */
 function nouvelEmploye(): Employe {
-  return { id: nouvelId(), prenom: '', nom: '', telephone: '', postes: ['vente'], statut: 'standard', actif: true };
+  return { id: nouvelId(), prenom: '', nom: '', telephone: '', postes: ['vente'], statuts: ['standard'], actif: true };
+}
+
+/** Ajoute la valeur à la liste si elle n'y est pas, la retire sinon. */
+function basculer<T>(liste: T[], valeur: T): T[] {
+  return liste.includes(valeur) ? liste.filter((v) => v !== valeur) : [...liste, valeur];
 }
 
 export function FormulaireEmploye({ employe, onEnregistrer, onSupprimer }: Props) {
@@ -27,16 +32,16 @@ export function FormulaireEmploye({ employe, onEnregistrer, onSupprimer }: Props
     setValeurs((v) => ({ ...v, [champ]: valeur }));
 
   /** Coche ou décoche un poste. */
-  const basculerPoste = (poste: Poste) =>
-    modifier(
-      'postes',
-      valeurs.postes.includes(poste) ? valeurs.postes.filter((p) => p !== poste) : [...valeurs.postes, poste],
-    );
+  const basculerPoste = (poste: Poste) => modifier('postes', basculer(valeurs.postes, poste));
+
+  /** Coche ou décoche un statut (plusieurs statuts cumulables). */
+  const basculerStatut = (statut: Statut) => modifier('statuts', basculer(valeurs.statuts, statut));
 
   const soumettre = (e: FormEvent) => {
     e.preventDefault();
     if (!valeurs.prenom.trim()) return setErreur('Le prénom est obligatoire.');
     if (valeurs.postes.length === 0) return setErreur('Choisissez au moins un poste.');
+    if (valeurs.statuts.length === 0) return setErreur('Choisissez au moins un statut.');
     onEnregistrer({ ...valeurs, prenom: valeurs.prenom.trim(), nom: valeurs.nom.trim() });
   };
 
@@ -80,15 +85,14 @@ export function FormulaireEmploye({ employe, onEnregistrer, onSupprimer }: Props
       </fieldset>
 
       <fieldset>
-        <legend>Statut</legend>
+        <legend>Statuts * (plusieurs possibles)</legend>
         <div className="choix">
           {STATUTS.map((statut) => (
             <label key={statut} className="case">
               <input
-                type="radio"
-                name="statut"
-                checked={valeurs.statut === statut}
-                onChange={() => modifier('statut', statut)}
+                type="checkbox"
+                checked={valeurs.statuts.includes(statut)}
+                onChange={() => basculerStatut(statut)}
               />
               {LIBELLES_STATUT[statut]}
             </label>
