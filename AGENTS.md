@@ -27,8 +27,13 @@ Application de gestion pour un glacier : plannings, stocks et employés.
 
 ## Stack technique
 
-- PWA (décidé).
-- Framework front, back-end, base de données, hébergement : **à définir**.
+- **PWA** : React 19 + TypeScript, construite avec **Vite** ; manifeste et service worker générés par `vite-plugin-pwa` (installable, fonctionne hors ligne).
+- **Routage** : `react-router-dom` en mode *hash* (`#/planning`), qui fonctionne sans configuration serveur, sur GitHub Pages comme dans Capacitor.
+- **Styles** : CSS simple (`src/styles.css`) avec variables, mobile first ; pas de framework CSS.
+- **Données (v1)** : stockage local du navigateur (`localStorage`), isolé dans `src/data/stockage.ts`. Export/import JSON depuis la page Paramètres. Pas de back-end pour l'instant : le jour où il en faudra un (partage entre appareils, comptes), seul ce module sera à remplacer.
+- **Tests** : Vitest, sur les règles métier de `src/lib/` et le reducer.
+- **Hébergement** : GitHub Pages, publié automatiquement par GitHub Actions à chaque fusion sur `main`.
+- **Commandes** : `npm run dev`, `npm test`, `npm run build`.
 
 ## Workflow GitHub
 

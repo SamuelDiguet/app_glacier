@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Icône de l'application : un cornet de glace sur fond rose -->
+  <rect width="512" height="512" rx="112" fill="#e85d75"/>
+  <path d="M176 248 L256 448 L336 248 Z" fill="#f4b860"/>
+  <path d="M196 268 L316 268 M206 300 L306 300 M220 334 L292 334" stroke="#d9963a" stroke-width="10"/>
+  <circle cx="256" cy="186" r="92" fill="#fff8f3"/>
+  <circle cx="200" cy="232" r="52" fill="#fff8f3"/>
+  <circle cx="312" cy="232" r="52" fill="#fff8f3"/>
+  <circle cx="256" cy="104" r="18" fill="#c62f4b"/>
+</svg>
