@@ -3,13 +3,13 @@
 Application de gestion pour un glacier : **plannings**, **stocks** et **employés**.
 Application web installable (PWA), utilisable sur ordinateur et sur smartphone.
 
-## Fonctionnalités (v0.1)
+## Fonctionnalités (v0.2)
 
 - **Accueil** : équipe du jour, alertes de stock, heures planifiées de la semaine.
 - **Employés** : ajout, modification, postes (vente, production), statut (standard, pâtissier, manager), activation.
 - **Planning** : vue par semaine, créneaux par employé et par poste, contrôle des conflits
   (double affectation, poste non tenu, horaires incohérents), total d'heures, copie de la semaine précédente.
-- **Stocks** : produits par catégorie, entrées et sorties avec motif, seuil d'alerte, historique des mouvements.
+- **Stocks** : deux familles séparées. **Bacs de glace** par parfum (compteur −1 / +1, alerte « à produire ») et **matières premières** de production (entrées et sorties avec motif, alerte « à commander »), plus l'historique des mouvements.
 - **Paramètres** : export et import des données (JSON), données d'exemple, remise à zéro.
 
 Les données sont enregistrées **dans le navigateur de l'appareil** (pas encore de serveur) :

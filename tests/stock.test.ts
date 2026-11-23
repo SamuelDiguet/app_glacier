@@ -7,7 +7,7 @@ import { appliquerMouvement, estEnAlerte, produitsEnAlerte } from '../src/lib/st
 import { reducer } from '../src/data/DonneesContext';
 import { donneesVides } from '../src/data/stockage';
 
-const vanille: Produit = { id: 'p1', nom: 'Vanille', categorie: 'Glaces', unite: 'bac', quantite: 3, seuilAlerte: 2 };
+const vanille: Produit = { id: 'p1', famille: 'bac', nom: 'Vanille', categorie: 'Glaces', unite: 'bac', quantite: 3, seuilAlerte: 2 };
 
 describe('stock', () => {
   it('applique les entrées et les sorties', () => {

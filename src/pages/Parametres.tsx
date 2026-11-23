@@ -7,7 +7,7 @@
  */
 import { useRef, useState, type ChangeEvent } from 'react';
 import { useDonnees } from '../data/DonneesContext';
-import { donneesVides, estDonneesValides } from '../data/stockage';
+import { donneesVides, estDonneesValides, migrerDonnees } from '../data/stockage';
 import { donneesExemple } from '../data/exemple';
 import { aujourdhui } from '../lib/dates';
 
@@ -35,7 +35,7 @@ export function Parametres() {
       const contenu: unknown = JSON.parse(await fichier.text());
       if (!estDonneesValides(contenu)) throw new Error();
       if (!confirm('Remplacer toutes les données actuelles par celles du fichier ?')) return;
-      dispatch({ type: 'donnees/remplacer', donnees: contenu });
+      dispatch({ type: 'donnees/remplacer', donnees: migrerDonnees(contenu) });
       setMessage('Données importées.');
     } catch {
       setMessage("Ce fichier n'est pas une sauvegarde valide.");

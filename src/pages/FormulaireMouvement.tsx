@@ -2,7 +2,7 @@
  * Formulaire d'entrée ou de sortie de stock pour un produit.
  */
 import { useState, type FormEvent } from 'react';
-import type { Mouvement, Produit, TypeMouvement } from '../types';
+import type { FamilleStock, Mouvement, Produit, TypeMouvement } from '../types';
 import { appliquerMouvement } from '../lib/stock';
 import { nouvelId } from '../lib/ids';
 
@@ -12,22 +12,29 @@ interface Props {
   onEnregistrer: (mouvement: Mouvement) => void;
 }
 
-/** Motifs proposés selon le sens du mouvement (saisie libre possible). */
-const MOTIFS: Record<TypeMouvement, string[]> = {
-  entree: ['Livraison', 'Production', 'Inventaire'],
-  sortie: ['Vente', 'Utilisé en production', 'Perte / casse', 'Inventaire'],
+/** Motifs proposés selon la famille et le sens du mouvement (saisie libre possible). */
+export const MOTIFS: Record<FamilleStock, Record<TypeMouvement, string[]>> = {
+  bac: {
+    entree: ['Production', 'Inventaire'],
+    sortie: ['Bac terminé', 'Perte', 'Inventaire'],
+  },
+  matiere: {
+    entree: ['Livraison', 'Inventaire'],
+    sortie: ['Utilisé en production', 'Perte / casse', 'Inventaire'],
+  },
 };
 
 export function FormulaireMouvement({ produit, typeInitial, onEnregistrer }: Props) {
   const [type, setType] = useState<TypeMouvement>(typeInitial);
   const [quantite, setQuantite] = useState(1);
-  const [motif, setMotif] = useState(MOTIFS[typeInitial][0]);
+  const motifs = MOTIFS[produit.famille];
+  const [motif, setMotif] = useState(motifs[typeInitial][0]);
   const [erreur, setErreur] = useState('');
 
   /** Change le sens du mouvement et propose le motif par défaut correspondant. */
   const changerType = (nouveau: TypeMouvement) => {
     setType(nouveau);
-    setMotif(MOTIFS[nouveau][0]);
+    setMotif(motifs[nouveau][0]);
   };
 
   // Aperçu de la quantité après le mouvement (ou message d'erreur).
@@ -88,7 +95,7 @@ export function FormulaireMouvement({ produit, typeInitial, onEnregistrer }: Pro
         Motif
         <input list={`motifs-${type}`} value={motif} onChange={(e) => setMotif(e.target.value)} />
         <datalist id={`motifs-${type}`}>
-          {MOTIFS[type].map((m) => (
+          {motifs[type].map((m) => (
             <option key={m} value={m} />
           ))}
         </datalist>

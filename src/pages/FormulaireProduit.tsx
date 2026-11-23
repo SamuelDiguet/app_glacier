@@ -1,25 +1,33 @@
 /**
- * Formulaire de création / modification d'un produit en stock.
+ * Formulaire de création / modification d'un produit en stock :
+ * un parfum (compté en bacs) ou une matière première (unité au choix).
  * La quantité n'est saisie qu'à la création : ensuite, elle évolue
  * uniquement par des mouvements d'entrée et de sortie (traçabilité).
  */
 import { useState, type FormEvent } from 'react';
-import type { Produit } from '../types';
-import { CATEGORIES_PRODUIT, UNITES } from '../lib/libelles';
+import type { FamilleStock, Produit } from '../types';
+import { CATEGORIES_PAR_FAMILLE, UNITES_MATIERE } from '../lib/libelles';
 import { nouvelId } from '../lib/ids';
 
 interface Props {
+  /** Famille du produit à créer (ignorée en modification). */
+  famille: FamilleStock;
   produit?: Produit;
   onEnregistrer: (produit: Produit) => void;
   onSupprimer?: () => void;
 }
 
-function nouveauProduit(): Produit {
-  return { id: nouvelId(), nom: '', categorie: 'Glaces', unite: 'bac', quantite: 0, seuilAlerte: 1 };
+/** Valeurs par défaut d'un nouveau produit selon sa famille. */
+function nouveauProduit(famille: FamilleStock): Produit {
+  const base = { id: nouvelId(), famille, nom: '', categorie: CATEGORIES_PAR_FAMILLE[famille][0], quantite: 0 };
+  return famille === 'bac'
+    ? { ...base, unite: 'bac', seuilAlerte: 2 }
+    : { ...base, unite: 'kg', seuilAlerte: 1 };
 }
 
-export function FormulaireProduit({ produit, onEnregistrer, onSupprimer }: Props) {
-  const [valeurs, setValeurs] = useState<Produit>(produit ?? nouveauProduit());
+export function FormulaireProduit({ famille, produit, onEnregistrer, onSupprimer }: Props) {
+  const [valeurs, setValeurs] = useState<Produit>(produit ?? nouveauProduit(famille));
+  const estBac = valeurs.famille === 'bac';
   const [erreur, setErreur] = useState('');
 
   const modifier = <K extends keyof Produit>(champ: K, valeur: Produit[K]) =>
@@ -35,8 +43,9 @@ export function FormulaireProduit({ produit, onEnregistrer, onSupprimer }: Props
   return (
     <form className="formulaire" onSubmit={soumettre}>
       <label>
-        Nom *
-        <input value={valeurs.nom} onChange={(e) => modifier('nom', e.target.value)} autoFocus />
+        {estBac ? 'Parfum *' : 'Matière première *'}
+        <input
+          placeholder={estBac ? 'Ex. : Pistache' : 'Ex. : Pâte de pistache'} value={valeurs.nom} onChange={(e) => modifier('nom', e.target.value)} autoFocus />
       </label>
 
       <div className="ligne-champs">
@@ -48,27 +57,30 @@ export function FormulaireProduit({ produit, onEnregistrer, onSupprimer }: Props
             onChange={(e) => modifier('categorie', e.target.value)}
           />
           <datalist id="categories-produit">
-            {CATEGORIES_PRODUIT.map((c) => (
+            {CATEGORIES_PAR_FAMILLE[valeurs.famille].map((c) => (
               <option key={c} value={c} />
             ))}
           </datalist>
         </label>
-        <label>
-          Unité
-          <select value={valeurs.unite} onChange={(e) => modifier('unite', e.target.value as Produit['unite'])}>
-            {UNITES.map((u) => (
-              <option key={u} value={u}>
-                {u}
-              </option>
-            ))}
-          </select>
-        </label>
+        {/* Les parfums se comptent toujours en bacs : l'unité n'est choisie que pour les matières. */}
+        {!estBac && (
+          <label>
+            Unité
+            <select value={valeurs.unite} onChange={(e) => modifier('unite', e.target.value as Produit['unite'])}>
+              {UNITES_MATIERE.map((u) => (
+                <option key={u} value={u}>
+                  {u}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
       </div>
 
       <div className="ligne-champs">
         {!produit && (
           <label>
-            Quantité initiale
+            {estBac ? 'Bacs en stock' : 'Quantité initiale'}
             <input
               type="number"
               inputMode="decimal"
@@ -91,7 +103,11 @@ export function FormulaireProduit({ produit, onEnregistrer, onSupprimer }: Props
           />
         </label>
       </div>
-      <p className="aide">Le produit est signalé quand son stock descend au seuil ou en dessous.</p>
+      <p className="aide">
+        {estBac
+          ? 'Le parfum est signalé « à produire » quand il reste ce nombre de bacs ou moins.'
+          : 'La matière est signalée « à commander » quand son stock descend au seuil ou en dessous.'}
+      </p>
 
       {erreur && <p className="erreur" role="alert">{erreur}</p>}
 

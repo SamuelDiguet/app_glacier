@@ -20,7 +20,9 @@ Application de gestion pour un glacier : plannings, stocks et employés.
 ## Fonctionnalités
 
 1. **Plannings** : créer et consulter les plannings des employés.
-2. **Stocks** : suivre les stocks (entrées, sorties, niveaux).
+2. **Stocks** : suivre les stocks (entrées, sorties, niveaux), en deux familles distinctes :
+   - **Bacs de glace** : nombre de bacs restants **par parfum** (prêts à la vente), alerte « à produire » sous un seuil ;
+   - **Matières premières** : ingrédients et fournitures pour la production (Nutella, pâte de pistache, crème, sucre, cornets…), avec unité au choix (kg, L, pièce, carton) et alerte « à commander ».
 3. **Employés** : ajouter des employés et leur attribuer des postes.
    - **Postes** : vente, production.
    - **Statuts** : standard, pâtissier, manager.
@@ -31,6 +33,7 @@ Application de gestion pour un glacier : plannings, stocks et employés.
 - **Routage** : `react-router-dom` en mode *hash* (`#/planning`), qui fonctionne sans configuration serveur, sur GitHub Pages comme dans Capacitor.
 - **Styles** : CSS simple (`src/styles.css`) avec variables, mobile first ; pas de framework CSS.
 - **Données (v1)** : stockage local du navigateur (`localStorage`), isolé dans `src/data/stockage.ts`. Export/import JSON depuis la page Paramètres. Pas de back-end pour l'instant : le jour où il en faudra un (partage entre appareils, comptes), seul ce module sera à remplacer.
+- **Format des données** : versionné (`VERSION_DONNEES` dans `src/data/stockage.ts`). Toute évolution de structure incrémente la version et ajoute une étape dans `migrerDonnees`, pour ne pas perdre les données déjà saisies.
 - **Tests** : Vitest, sur les règles métier de `src/lib/` et le reducer.
 - **Hébergement** : GitHub Pages via GitHub Actions, prévu mais désactivé pour l'instant (dépôt privé) ; s'active avec la variable de dépôt `DEPLOY_PAGES` = `true`. En attendant, un aperçu est publié sous forme d'artifact Claude.
 - **Commandes** : `npm run dev`, `npm test`, `npm run build`.
