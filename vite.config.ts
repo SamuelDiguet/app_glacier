@@ -22,6 +22,14 @@ export default defineConfig({
       // Enregistrement fait dans src/lib/miseAJour.ts (vérifications régulières).
       injectRegister: false,
       includeAssets: ['icon.svg', 'apple-touch-icon.png'],
+      // Le nouveau service worker prend la main dès son installation, sans
+      // attendre la fermeture de tous les onglets : indispensable pour que
+      // l'app installée sur un téléphone passe à la nouvelle version.
+      workbox: {
+        skipWaiting: true,
+        clientsClaim: true,
+        cleanupOutdatedCaches: true,
+      },
       manifest: {
         name: 'Gestion glacier',
         short_name: 'Glacier',
