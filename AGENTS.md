@@ -38,6 +38,12 @@ Application de gestion pour un glacier : plannings, stocks et employés.
 - Une pull request par sujet, avec une description claire en français.
 - Branche principale : `main`.
 
+## Qualité du code
+
+- Écrire un code **propre et lisible** : noms explicites, fonctions courtes, une responsabilité par module.
+- **Commenter tout le code** : rôle de chaque fichier, fonction et bloc non trivial (commentaires en français).
+- **Vérifier l'optimisation à chaque modification** : relire le code produit, supprimer les doublons et le code mort, éviter les calculs et requêtes inutiles.
+
 ## Conventions
 
 - Langue de la documentation, des descriptions de PR et de l'interface : **français**.
