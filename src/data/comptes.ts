@@ -47,14 +47,15 @@ function adresseRetour(): string {
 }
 
 /**
- * Crée un compte. Supabase envoie alors un e-mail contenant le code de
- * confirmation (et un lien équivalent). Le téléphone est facultatif.
+ * Crée un compte. Supabase envoie alors un e-mail de confirmation (lien,
+ * et code si le modèle d'e-mail le contient). Le téléphone se renseigne
+ * ensuite, facultativement, dans Paramètres > Mon compte.
  */
-export async function inscrire(client: SupabaseClient, email: string, motDePasse: string, telephone: string) {
+export async function inscrire(client: SupabaseClient, email: string, motDePasse: string) {
   const { error } = await client.auth.signUp({
     email: email.trim(),
     password: motDePasse,
-    options: { data: { telephone: telephone.trim() }, emailRedirectTo: adresseRetour() },
+    options: { emailRedirectTo: adresseRetour() },
   });
   verifier(error);
 }
