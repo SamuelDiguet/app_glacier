@@ -1,6 +1,8 @@
 # Intégration continue et déploiement.
 # - Sur chaque pull request : vérification des types, tests et build.
-# - Sur la branche main : même chose, puis publication sur GitHub Pages.
+# - Sur la branche main : même chose, puis publication sur GitHub Pages,
+#   uniquement si la variable de dépôt DEPLOY_PAGES vaut "true"
+#   (Settings > Secrets and variables > Actions > Variables), une fois Pages activé.
 name: CI et déploiement
 
 on:
@@ -28,12 +30,12 @@ jobs:
         env:
           BASE_PATH: /${{ github.event.repository.name }}/
       - uses: actions/upload-pages-artifact@v3
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && vars.DEPLOY_PAGES == 'true'
         with:
           path: dist
 
   deployer:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && vars.DEPLOY_PAGES == 'true'
     needs: verifier
     runs-on: ubuntu-latest
     permissions:

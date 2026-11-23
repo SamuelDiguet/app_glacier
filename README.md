@@ -40,5 +40,6 @@ tests/                Tests unitaires
 
 ## Déploiement
 
-Chaque fusion sur `main` publie l'application sur GitHub Pages via GitHub Actions
-(`.github/workflows/ci.yml`).
+La publication sur GitHub Pages est prête mais désactivée : pour l'activer, activer Pages
+(Source « GitHub Actions ») puis créer la variable de dépôt `DEPLOY_PAGES` = `true`.
+Chaque fusion sur `main` publiera alors l'application (`.github/workflows/ci.yml`).
