@@ -41,9 +41,19 @@ export interface Creneau {
 /** Unités possibles pour un produit en stock. */
 export type Unite = 'bac' | 'kg' | 'L' | 'pièce' | 'carton';
 
-/** Un produit suivi en stock. */
+/**
+ * Famille de stock :
+ * - `bac` : bacs de glace prêts à la vente, comptés par parfum ;
+ * - `matiere` : matières premières et fournitures servant à la production
+ *   (Nutella, pâte de pistache, crème, sucre, cornets…).
+ */
+export type FamilleStock = 'bac' | 'matiere';
+
+/** Un produit suivi en stock (un parfum en bacs, ou une matière première). */
 export interface Produit {
   id: string;
+  famille: FamilleStock;
+  /** Nom du parfum (bacs) ou de la matière première. */
   nom: string;
   categorie: string;
   unite: Unite;

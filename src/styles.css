@@ -330,7 +330,12 @@ select:focus-visible {
 }
 
 .onglets {
-  max-width: 360px;
+  max-width: 560px;
+}
+
+.onglets button {
+  padding: 0 8px;
+  font-size: 0.9rem;
 }
 
 /* ---------- Cartes et listes ---------- */
@@ -831,4 +836,82 @@ ul.erreur {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+/* ---------- Stocks : bacs de glace par parfum ---------- */
+/* Une tuile par parfum avec un compteur −/+ ; 2 colonnes sur mobile. */
+.grille-bacs {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+
+.bac {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 10px;
+  background: var(--blanc);
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon);
+  text-align: center;
+}
+
+.bac.en-alerte {
+  background: var(--alerte-clair);
+  border-color: #f5c4a6;
+}
+
+.bac-nom {
+  border: none;
+  background: none;
+  padding: 0;
+  font-weight: 700;
+  color: var(--texte);
+}
+
+.bac-compteur {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bac-compteur .bouton-icone:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.bac-nombre {
+  display: flex;
+  flex-direction: column;
+  min-width: 40px;
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.bac-nombre small {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--texte-doux);
+}
+
+.bac-etat {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  color: var(--texte-doux);
+}
+
+.bac.en-alerte .bac-etat {
+  color: var(--alerte);
+  font-weight: 600;
+}
+
+/* Titre secondaire à l'intérieur d'une carte (ex. deux listes dans un même bloc). */
+.sous-bloc {
+  margin-top: 16px;
 }

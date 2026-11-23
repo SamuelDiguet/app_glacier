@@ -2,7 +2,7 @@
  * Libellés affichés dans l'interface pour les valeurs techniques
  * (postes, statuts, unités…). Centralisés ici pour rester cohérents.
  */
-import type { Poste, Statut, Unite } from '../types';
+import type { FamilleStock, Poste, Statut, Unite } from '../types';
 
 export const LIBELLES_POSTE: Record<Poste, string> = {
   vente: 'Vente',
@@ -17,7 +17,17 @@ export const LIBELLES_STATUT: Record<Statut, string> = {
 
 export const POSTES: Poste[] = ['vente', 'production'];
 export const STATUTS: Statut[] = ['standard', 'patissier', 'manager'];
-export const UNITES: Unite[] = ['bac', 'kg', 'L', 'pièce', 'carton'];
+/** Unités proposées pour les matières premières (les parfums se comptent en bacs). */
+export const UNITES_MATIERE: Unite[] = ['kg', 'L', 'pièce', 'carton'];
 
-/** Catégories proposées par défaut pour les produits (saisie libre possible). */
-export const CATEGORIES_PRODUIT = ['Glaces', 'Sorbets', 'Ingrédients', 'Emballages', 'Boissons'];
+/** Libellés courts des familles de stock (onglets, qui doivent tenir sur mobile). */
+export const LIBELLES_FAMILLE: Record<FamilleStock, string> = {
+  bac: 'Bacs de glace',
+  matiere: 'Matières',
+};
+
+/** Catégories proposées par famille (saisie libre possible). */
+export const CATEGORIES_PAR_FAMILLE: Record<FamilleStock, string[]> = {
+  bac: ['Glaces', 'Sorbets'],
+  matiere: ['Produits laitiers', 'Fruits', 'Pâtes et arômes', 'Sucres', 'Emballages'],
+};

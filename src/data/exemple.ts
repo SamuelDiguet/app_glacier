@@ -13,9 +13,14 @@ function employe(prenom: string, nom: string, postes: Poste[], statut: Employe['
   return { id: nouvelId(), prenom, nom, telephone: '', postes, statut, actif: true };
 }
 
-/** Construit un produit d'exemple. */
-function produit(nom: string, categorie: string, unite: Produit['unite'], quantite: number, seuilAlerte: number): Produit {
-  return { id: nouvelId(), nom, categorie, unite, quantite, seuilAlerte };
+/** Construit un parfum d'exemple, compté en bacs. */
+function parfum(nom: string, categorie: string, quantite: number, seuilAlerte: number): Produit {
+  return { id: nouvelId(), famille: 'bac', nom, categorie, unite: 'bac', quantite, seuilAlerte };
+}
+
+/** Construit une matière première d'exemple. */
+function matiere(nom: string, categorie: string, unite: Produit['unite'], quantite: number, seuilAlerte: number): Produit {
+  return { id: nouvelId(), famille: 'matiere', nom, categorie, unite, quantite, seuilAlerte };
 }
 
 /** Génère les données d'exemple, avec un planning sur la semaine en cours. */
@@ -41,14 +46,22 @@ export function donneesExemple(): DonneesGlacier {
   }
 
   const produits = [
-    produit('Vanille de Madagascar', 'Glaces', 'bac', 6, 2),
-    produit('Chocolat noir', 'Glaces', 'bac', 2, 2),
-    produit('Pistache', 'Glaces', 'bac', 4, 2),
-    produit('Sorbet framboise', 'Sorbets', 'bac', 1, 2),
-    produit('Lait entier', 'Ingrédients', 'L', 40, 20),
-    produit('Sucre', 'Ingrédients', 'kg', 25, 10),
-    produit('Cornets', 'Emballages', 'carton', 3, 2),
-    produit('Pots 2 boules', 'Emballages', 'carton', 1, 2),
+    // Bacs de glace prêts à la vente, par parfum.
+    parfum('Vanille', 'Glaces', 6, 2),
+    parfum('Chocolat', 'Glaces', 2, 2),
+    parfum('Pistache', 'Glaces', 4, 2),
+    parfum('Nutella', 'Glaces', 3, 2),
+    parfum('Framboise', 'Sorbets', 1, 2),
+    parfum('Citron', 'Sorbets', 3, 1),
+    // Matières premières pour la production.
+    matiere('Lait entier', 'Produits laitiers', 'L', 40, 20),
+    matiere('Crème liquide 35 %', 'Produits laitiers', 'L', 8, 10),
+    matiere('Nutella', 'Pâtes et arômes', 'kg', 6, 3),
+    matiere('Pâte de pistache', 'Pâtes et arômes', 'kg', 1.5, 2),
+    matiere('Gousses de vanille', 'Pâtes et arômes', 'pièce', 30, 10),
+    matiere('Framboises surgelées', 'Fruits', 'kg', 5, 3),
+    matiere('Sucre', 'Sucres', 'kg', 25, 10),
+    matiere('Cornets', 'Emballages', 'carton', 3, 2),
   ];
 
   return { version: VERSION_DONNEES, employes, creneaux, produits, mouvements: [] };

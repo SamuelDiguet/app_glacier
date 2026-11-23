@@ -3,6 +3,7 @@
  * (équipe du jour, alertes de stock, chiffres de la semaine).
  */
 import { Link } from 'react-router-dom';
+import type { Produit } from '../types';
 import { useDonnees } from '../data/DonneesContext';
 import { Icone } from '../components/Icone';
 import { BadgePoste } from '../components/Badge';
@@ -70,26 +71,32 @@ export function Accueil() {
         </div>
 
         <div className="carte bloc">
-          <h2>Stocks à surveiller</h2>
-          {alertes.length === 0 ? (
-            <p className="vide">Tous les stocks sont au-dessus de leur seuil.</p>
-          ) : (
-            <ul className="liste-simple">
-              {alertes.map((p) => (
-                <li key={p.id} className="en-alerte">
-                  <span>
-                    <Icone nom="alerte" taille={16} /> {p.nom}
-                  </span>
-                  <strong>
-                    {p.quantite} / {p.seuilAlerte} {p.unite}
-                  </strong>
-                </li>
-              ))}
-            </ul>
-          )}
+          <h2>Bacs à produire</h2>
+          <ListeAlertes produits={alertes.filter((p) => p.famille === 'bac')} vide="Tous les parfums ont assez de bacs." />
+          <h2 className="sous-bloc">Matières à commander</h2>
+          <ListeAlertes produits={alertes.filter((p) => p.famille === 'matiere')} vide="Aucune matière première sous son seuil." />
           <Link to="/stocks" className="lien-suite">Gérer les stocks</Link>
         </div>
       </div>
     </section>
+  );
+}
+
+/** Liste de produits en alerte (quantité / seuil), ou un message s'il n'y en a aucun. */
+function ListeAlertes({ produits, vide }: { produits: Produit[]; vide: string }) {
+  if (produits.length === 0) return <p className="vide">{vide}</p>;
+  return (
+    <ul className="liste-simple">
+      {produits.map((p) => (
+        <li key={p.id} className="en-alerte">
+          <span>
+            <Icone nom="alerte" taille={16} /> {p.nom}
+          </span>
+          <strong>
+            {p.quantite} / {p.seuilAlerte} {p.unite}
+          </strong>
+        </li>
+      ))}
+    </ul>
   );
 }
