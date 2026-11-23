@@ -24,17 +24,20 @@ Dans **Authentication** :
   bien à la personne). Longueur minimale du mot de passe : 8.
 - **URL Configuration** : *Site URL* = `https://samueldiguet.github.io/app_glacier/`,
   et ajouter `http://localhost:5173/` dans *Redirect URLs* pour le développement.
-- **Emails > Templates** : dans « Confirm signup » et « Reset password »,
-  ajouter le code à 6 chiffres que l'application demande, par exemple :
+- **E-mails de confirmation** : le modèle par défaut contient un lien. Il
+  ramène sur l'application ; si on l'ouvre dans le navigateur où le compte a
+  été créé, la session s'ouvre directement, sinon l'adresse est quand même
+  confirmée et il suffit de se connecter. Pour « mot de passe oublié », le
+  lien doit être ouvert dans le navigateur où la demande a été faite.
+- **Code à 6 chiffres (facultatif)** : l'application sait aussi valider un
+  code. Il faut pour cela ajouter `{{ .Token }}` dans les modèles « Confirm
+  signup » et « Reset password » (Emails > Templates), ce que Supabase
+  n'autorise qu'avec un SMTP personnalisé (voir ci-dessous), par exemple :
 
   ```html
-  <h2>Gestion glacier</h2>
   <p>Votre code : <strong>{{ .Token }}</strong></p>
   <p>Ou cliquez sur ce lien : <a href="{{ .ConfirmationURL }}">confirmer</a></p>
   ```
-
-  Le code fonctionne sur tous les appareils ; le lien ne fonctionne que dans
-  le navigateur où le compte a été créé.
 
 **Envoi des e-mails** : le service d'e-mail fourni par défaut par Supabase
 n'envoie qu'aux membres de l'équipe du projet Supabase, et seulement quelques

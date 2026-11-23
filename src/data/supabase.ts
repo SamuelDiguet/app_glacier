@@ -12,6 +12,14 @@
  * mode local (données dans le navigateur, sans comptes), comme avant.
  */
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+import { lireRetourLien, type RetourLien } from '../lib/retourLien';
+
+/**
+ * Paramètres laissés dans l'adresse par un lien reçu par e-mail (confirmation
+ * d'inscription, mot de passe oublié). Lus avant la création du client, qui
+ * les efface de l'adresse après les avoir traités.
+ */
+export const retourLien: RetourLien = lireRetourLien(window.location.search, window.location.hash);
 
 const url = import.meta.env.VITE_SUPABASE_URL;
 const clePublique = import.meta.env.VITE_SUPABASE_CLE_PUBLIQUE;
@@ -30,4 +38,14 @@ export const supabase: SupabaseClient | null =
         },
       })
     : null;
+
+/**
+ * Vrai si l'ouverture de l'app vient d'un lien « mot de passe oublié ».
+ * L'abonnement est pris tout de suite après la création du client, pour ne
+ * pas manquer l'événement émis pendant le traitement du lien.
+ */
+export let arriveeParRecuperation = false;
+supabase?.auth.onAuthStateChange((evenement) => {
+  if (evenement === 'PASSWORD_RECOVERY') arriveeParRecuperation = true;
+});
 
