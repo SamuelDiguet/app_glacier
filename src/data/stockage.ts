@@ -2,12 +2,20 @@
  * Persistance locale des données dans le navigateur (localStorage).
  *
  * Toute l'application est sauvegardée sous une seule clé JSON. Ce module
- * est le seul à connaître le support de stockage : pour passer plus tard à
- * un back-end ou au stockage natif de Capacitor, il suffira de le remplacer.
+ * est le seul à connaître le support de stockage local.
+ *
+ * - Mode local (sans comptes) : `CLE_STOCKAGE` contient les données de référence.
+ * - Mode connecté : les données de référence sont sur le serveur (voir
+ *   distant.ts) ; `CLE_CACHE` en garde une copie pour consulter l'app hors
+ *   ligne. Ce cache est effacé à la déconnexion.
  */
 import type { DonneesGlacier, Employe, Produit, Statut } from '../types';
 
-const CLE_STOCKAGE = 'gestion-glacier:donnees';
+/** Clé des données en mode local. */
+export const CLE_STOCKAGE = 'gestion-glacier:donnees';
+
+/** Clé de la copie hors ligne des données du serveur, en mode connecté. */
+export const CLE_CACHE = 'gestion-glacier:cache';
 
 /** Version du format des données, à incrémenter en cas de changement de structure. */
 export const VERSION_DONNEES = 4;
@@ -54,9 +62,9 @@ export function migrerDonnees(donnees: DonneesGlacier): DonneesGlacier {
 }
 
 /** Lit les données sauvegardées, ou `null` s'il n'y en a pas (ou si elles sont illisibles). */
-export function chargerDonnees(): DonneesGlacier | null {
+export function chargerDonnees(cle = CLE_STOCKAGE): DonneesGlacier | null {
   try {
-    const brut = localStorage.getItem(CLE_STOCKAGE);
+    const brut = localStorage.getItem(cle);
     if (!brut) return null;
     const donnees: unknown = JSON.parse(brut);
     return estDonneesValides(donnees) ? migrerDonnees(donnees) : null;
@@ -67,11 +75,20 @@ export function chargerDonnees(): DonneesGlacier | null {
 }
 
 /** Sauvegarde l'ensemble des données. Renvoie `false` si l'écriture a échoué. */
-export function sauvegarderDonnees(donnees: DonneesGlacier): boolean {
+export function sauvegarderDonnees(donnees: DonneesGlacier, cle = CLE_STOCKAGE): boolean {
   try {
-    localStorage.setItem(CLE_STOCKAGE, JSON.stringify(donnees));
+    localStorage.setItem(cle, JSON.stringify(donnees));
     return true;
   } catch {
     return false;
+  }
+}
+
+/** Supprime les données enregistrées sous une clé (ex. cache à la déconnexion). */
+export function effacerDonnees(cle: string): void {
+  try {
+    localStorage.removeItem(cle);
+  } catch {
+    // Stockage indisponible : rien à effacer.
   }
 }

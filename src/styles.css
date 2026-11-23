@@ -1037,3 +1037,95 @@ ul.erreur {
     display: none;
   }
 }
+
+/* ---------- Connexion et comptes (mode connecté) ---------- */
+/* Écran plein centré : connexion, chargement, compte non autorisé. */
+.ecran-centre {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.ecran-centre-theme {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+}
+
+.carte-centre {
+  width: 100%;
+  max-width: 400px;
+}
+
+.carte-centre h1 {
+  font-size: 1.3rem;
+  margin-bottom: 16px;
+}
+
+.marque-centre {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+}
+
+.liens-connexion {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+/* Bouton d'apparence « lien », pour passer d'une étape à l'autre. */
+.lien-bouton {
+  border: none;
+  background: none;
+  padding: 8px 0;
+  color: var(--rose-fonce);
+  text-decoration: underline;
+  font-size: 0.9rem;
+}
+
+/* Petite aide sous un champ de formulaire. */
+.aide-champ {
+  font-weight: 400;
+  color: var(--texte-doux);
+}
+
+/* Champ et bouton sur la même ligne (Paramètres > Mon compte). */
+.formulaire-ligne {
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.formulaire-ligne label {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Bandeau d'état du serveur en haut des pages. */
+.bandeau {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--surface);
+  border: 1px solid var(--bordure);
+  color: var(--texte-doux);
+  font-size: 0.9rem;
+}
+
+.bandeau-erreur {
+  background: var(--alerte-clair);
+  border-color: var(--alerte-bordure);
+  color: var(--alerte);
+}

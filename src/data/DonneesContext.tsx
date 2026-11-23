@@ -2,15 +2,18 @@
  * Contexte React qui détient toutes les données de l'application et
  * expose les actions pour les modifier.
  *
- * Les modifications passent par un reducer (fonction pure), puis l'état
- * est sauvegardé automatiquement dans le stockage local à chaque changement.
+ * Les modifications passent par un reducer (fonction pure). L'état est
+ * ensuite sauvegardé dans le navigateur et, en mode connecté, les lignes
+ * modifiées sont envoyées au serveur (voir distant.ts).
  */
-import { createContext, useContext, useEffect, useMemo, useReducer, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Creneau, DonneesGlacier, Employe, Mouvement, Produit } from '../types';
 import { appliquerMouvement } from '../lib/stock';
 import { ajouterJours } from '../lib/dates';
 import { nouvelId } from '../lib/ids';
-import { chargerDonnees, sauvegarderDonnees } from './stockage';
+import { CLE_CACHE, CLE_STOCKAGE, chargerDonnees, donneesVides, sauvegarderDonnees } from './stockage';
+import { calculerChangements, chargerDonneesDistantes, envoyerChangements, estVide } from './distant';
 import { donneesExemple } from './exemple';
 
 /** Toutes les actions possibles sur les données. */
@@ -90,29 +93,123 @@ function reducer(etat: DonneesGlacier, action: Action): DonneesGlacier {
   }
 }
 
+/** État de la liaison avec le serveur (mode connecté). */
+export interface Synchro {
+  /** Vrai pendant le premier chargement depuis le serveur. */
+  chargement: boolean;
+  /** Message d'erreur à afficher (serveur injoignable, écriture refusée…), ou chaîne vide. */
+  erreur: string;
+  /** Masque le message d'erreur. */
+  effacerErreur: () => void;
+}
+
 /** Ce que le contexte met à disposition des composants. */
 interface ValeurContexte {
   donnees: DonneesGlacier;
   dispatch: (action: Action) => void;
+  synchro: Synchro;
 }
 
 const DonneesContext = createContext<ValeurContexte | null>(null);
 
-/** Charge les données sauvegardées, ou les données d'exemple au premier lancement. */
-function etatInitial(): DonneesGlacier {
+/**
+ * État au démarrage :
+ * - mode local : données sauvegardées, ou données d'exemple au premier lancement ;
+ * - mode connecté : dernière copie hors ligne en attendant le serveur.
+ */
+function etatInitial(client: SupabaseClient | null): DonneesGlacier {
+  if (client) return chargerDonnees(CLE_CACHE) ?? donneesVides();
   return chargerDonnees() ?? donneesExemple();
 }
 
-/** Fournisseur à placer à la racine de l'application. */
-export function DonneesProvider({ children }: { children: ReactNode }) {
-  const [donnees, dispatch] = useReducer(reducer, undefined, etatInitial);
+const ERREUR_CHARGEMENT = 'Serveur injoignable : affichage des dernières données connues. Les modifications ne seront pas enregistrées.';
+const ERREUR_ENVOI = "La dernière modification n'a pas pu être enregistrée sur le serveur. Vérifiez la connexion internet puis recommencez.";
 
-  // Sauvegarde automatique après chaque modification.
+/**
+ * Fournisseur à placer à la racine de l'application.
+ * Avec un `client` Supabase, les données viennent du serveur et chaque
+ * modification y est envoyée ; sans client, tout reste dans le navigateur.
+ */
+export function DonneesProvider({ client = null, children }: { client?: SupabaseClient | null; children: ReactNode }) {
+  const [donnees, setDonnees] = useState(() => etatInitial(client));
+  const [chargement, setChargement] = useState(client !== null);
+  const [erreur, setErreur] = useState('');
+  // Copie toujours à jour de l'état, pour calculer les changements sans attendre un rendu.
+  const etatRef = useRef(donnees);
+  // File d'attente : les échanges avec le serveur partent un par un, dans l'ordre.
+  const fileRef = useRef<Promise<void>>(Promise.resolve());
+
+  /** Remplace l'état affiché. */
+  const appliquer = useCallback((nouvelles: DonneesGlacier) => {
+    etatRef.current = nouvelles;
+    setDonnees(nouvelles);
+  }, []);
+
+  /** Ajoute une tâche à la file des échanges avec le serveur. */
+  const enFile = useCallback((tache: () => Promise<void>) => {
+    fileRef.current = fileRef.current.then(tache, tache);
+  }, []);
+
+  /** Recharge toutes les données depuis le serveur. */
+  const recharger = useCallback(() => {
+    if (!client) return;
+    enFile(async () => {
+      try {
+        const reference = etatRef.current;
+        const serveur = await chargerDonneesDistantes(client);
+        // Si une modification a eu lieu pendant le chargement, on garde l'état
+        // à l'écran : elle part juste après et le prochain chargement l'inclura.
+        if (etatRef.current === reference) appliquer(serveur);
+      } catch {
+        setErreur(ERREUR_CHARGEMENT);
+      } finally {
+        setChargement(false);
+      }
+    });
+  }, [client, enFile, appliquer]);
+
+  // Mode connecté : chargement initial, puis à chaque retour sur l'app
+  // (un autre propriétaire a pu modifier les données entre-temps).
   useEffect(() => {
-    sauvegarderDonnees(donnees);
-  }, [donnees]);
+    if (!client) return;
+    recharger();
+    const auRetour = () => document.visibilityState === 'visible' && recharger();
+    document.addEventListener('visibilitychange', auRetour);
+    return () => document.removeEventListener('visibilitychange', auRetour);
+  }, [client, recharger]);
 
-  const valeur = useMemo(() => ({ donnees, dispatch }), [donnees]);
+  // Sauvegarde locale après chaque modification (données de référence en
+  // mode local, copie hors ligne en mode connecté).
+  useEffect(() => {
+    sauvegarderDonnees(donnees, client ? CLE_CACHE : CLE_STOCKAGE);
+  }, [donnees, client]);
+
+  /** Applique une action tout de suite à l'écran, puis l'envoie au serveur s'il y en a un. */
+  const dispatch = useCallback(
+    (action: Action) => {
+      const avant = etatRef.current;
+      const apres = reducer(avant, action);
+      appliquer(apres);
+      if (!client) return;
+      const changements = calculerChangements(avant, apres);
+      if (estVide(changements)) return;
+      enFile(async () => {
+        try {
+          await envoyerChangements(client, changements);
+        } catch {
+          // Échec : on revient à l'état réel du serveur.
+          setErreur(ERREUR_ENVOI);
+          recharger();
+        }
+      });
+    },
+    [client, appliquer, enFile, recharger],
+  );
+
+  const valeur = useMemo(
+    () => ({ donnees, dispatch, synchro: { chargement, erreur, effacerErreur: () => setErreur('') } }),
+    [donnees, dispatch, chargement, erreur],
+  );
   return <DonneesContext.Provider value={valeur}>{children}</DonneesContext.Provider>;
 }
 

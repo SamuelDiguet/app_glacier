@@ -3,7 +3,7 @@
 Application de gestion pour un glacier : **plannings**, **stocks** et **employés**.
 Application web installable (PWA), utilisable sur ordinateur et sur smartphone.
 
-## Fonctionnalités (v0.2)
+## Fonctionnalités (v0.5)
 
 - **Accueil** : équipe du jour, alertes de stock, heures planifiées de la semaine.
 - **Employés** : ajout, modification, postes (vente, production), statuts cumulables (standard, pâtissier, manager), majeur / mineur, notes libres, activation.
@@ -11,10 +11,12 @@ Application web installable (PWA), utilisable sur ordinateur et sur smartphone.
   (double affectation, poste non tenu, horaires incohérents), total d'heures, copie de la semaine précédente.
 - **Stocks** : deux familles séparées. **Bacs de glace** par parfum (compteur −1 / +1, alerte « à produire ») et **matières premières** de production (entrées et sorties avec motif, alerte « à commander »), plus l'historique des mouvements.
 - **Thème clair / sombre** : bouton lune / soleil en haut de l'écran (suit le système par défaut).
-- **Paramètres** : export et import des données (JSON), données d'exemple, remise à zéro.
+- **Connexion des propriétaires** : compte par e-mail et mot de passe (téléphone facultatif), confirmation par code reçu par e-mail, mot de passe oublié. Seuls les propriétaires autorisés accèdent aux données, qu'ils retrouvent sur tous leurs appareils.
+- **Paramètres** : mon compte, liste des propriétaires, export et import des données (JSON), remise à zéro.
 
-Les données sont enregistrées **dans le navigateur de l'appareil** (pas encore de serveur) :
-utiliser l'export pour les sauvegarder ou les transférer.
+Les données sont enregistrées sur un serveur **Supabase** partagé entre les propriétaires
+(mise en place : [supabase/README.md](supabase/README.md)). Sans configuration Supabase,
+l'application fonctionne en **mode local** : données dans le navigateur, sans connexion.
 
 ## Développement
 
@@ -33,10 +35,11 @@ npm run build      # vérification des types + build de production dans dist/
 src/
   types.ts            Types métier (Employe, Creneau, Produit, Mouvement…)
   lib/                Règles métier pures et testées (dates, planning, stock)
-  data/               Données : stockage local, contexte React, données d'exemple
+  data/               Données : stockage local, serveur Supabase, comptes, contexte React
   components/         Composants réutilisables (mise en page, fenêtre, icônes)
   pages/              Une page par fonctionnalité, avec ses formulaires
 tests/                Tests unitaires
+supabase/             Schéma de la base (tables, règles d'accès) et guide de mise en place
 ```
 
 ## Déploiement
