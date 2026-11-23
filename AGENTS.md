@@ -20,7 +20,7 @@ Application de gestion pour un glacier : plannings, stocks et employés.
 ## Utilisateurs
 
 - L'application est destinée **uniquement aux propriétaires de glacier**. Les employés ne se connectent pas.
-- On arrive sur la page de connexion ; **inscription libre** : e-mail + mot de passe, téléphone facultatif, confirmée par un **code reçu par e-mail**.
+- On arrive sur la page de connexion ; **inscription libre** : e-mail + mot de passe, téléphone facultatif, confirmée par le **lien reçu par e-mail** (ou un code à 6 chiffres si le modèle d'e-mail le contient, ce qui demande un SMTP personnalisé).
 - **Chaque compte a son propre espace** : il ne voit que ses données (employés, planning, stocks), sur tous ses appareils. Pas de partage entre comptes pour l'instant.
 - Côté base, chaque ligne porte la colonne `proprietaire` (= `auth.uid()`, remplie par le serveur) et les règles RLS filtrent dessus.
 

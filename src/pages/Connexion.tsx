@@ -23,8 +23,9 @@ export function Connexion() {
   const [motDePasse, setMotDePasse] = useState('');
   const [telephone, setTelephone] = useState('');
   const [code, setCode] = useState('');
-  const [erreur, setErreur] = useState('');
-  const [info, setInfo] = useState('');
+  // Au retour d'un lien reçu par e-mail, la session fournit le message à afficher.
+  const [erreur, setErreur] = useState(session.messageLien?.erreur ? session.messageLien.texte : '');
+  const [info, setInfo] = useState(session.messageLien && !session.messageLien.erreur ? session.messageLien.texte : '');
   const [envoi, setEnvoi] = useState(false);
 
   /** Change d'étape en effaçant les messages. */
@@ -60,7 +61,7 @@ export function Connexion() {
             // Compte pas encore confirmé : on propose directement la saisie du code.
             if (err instanceof ErreurCompte && err.code === 'email_not_confirmed') {
               await renvoyerCode(client, email);
-              aller('confirmation', 'Un nouveau code vient de vous être envoyé par e-mail.');
+              aller('confirmation', 'Ce compte n’est pas encore confirmé : un nouvel e-mail de confirmation vient de vous être envoyé. Cliquez sur le lien qu’il contient, puis reconnectez-vous.');
               return;
             }
             throw err;
@@ -72,7 +73,10 @@ export function Connexion() {
         }
         return executer(async () => {
           await inscrire(client, email, motDePasse, telephone);
-          aller('confirmation', `Un code de confirmation a été envoyé à ${email.trim()}.`);
+          aller(
+            'confirmation',
+            `Un e-mail de confirmation a été envoyé à ${email.trim()}. Cliquez sur le lien qu'il contient, puis connectez-vous. S'il contient un code, saisissez-le ci-dessous.`,
+          );
         });
       case 'confirmation':
         // La validation du code ouvre la session : App bascule alors sur l'application.
@@ -80,7 +84,10 @@ export function Connexion() {
       case 'oubli':
         return executer(async () => {
           await demanderReinitialisation(client, email);
-          aller('oubli-code', `Si un compte existe pour ${email.trim()}, un code vient de lui être envoyé.`);
+          aller(
+            'oubli-code',
+            `Si un compte existe pour ${email.trim()}, un e-mail vient de lui être envoyé. Ouvrez le lien qu'il contient dans ce navigateur pour choisir un nouveau mot de passe. S'il contient un code, saisissez-le ci-dessous.`,
+          );
         });
       case 'oubli-code':
         return executer(async () => {
@@ -138,7 +145,7 @@ export function Connexion() {
 
         {(etape === 'confirmation' || etape === 'oubli-code') && (
           <label>
-            Code reçu par e-mail
+            Code reçu par e-mail (s'il y en a un)
             <input
               inputMode="numeric"
               autoComplete="one-time-code"
@@ -168,14 +175,14 @@ export function Connexion() {
               onClick={() =>
                 executer(async () => {
                   await renvoyerCode(session.client, email);
-                  setInfo('Nouveau code envoyé.');
+                  setInfo('Nouvel e-mail envoyé.');
                 })
               }
             >
-              Renvoyer le code
+              Renvoyer l'e-mail
             </Lien>
           )}
-          {etape !== 'connexion' && <Lien onClick={() => aller('connexion')}>Retour à la connexion</Lien>}
+          {etape !== 'connexion' && <Lien onClick={() => aller('connexion')}>Aller à la connexion</Lien>}
         </div>
       </form>
     </EcranCentre>
@@ -195,7 +202,7 @@ const TITRES: Record<Etape, string> = {
 const BOUTONS: Record<Etape, string> = {
   connexion: 'Se connecter',
   inscription: 'Créer le compte',
-  confirmation: 'Valider',
+  confirmation: 'Valider le code',
   oubli: 'Recevoir un code',
   'oubli-code': 'Valider le code',
 };
