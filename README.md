@@ -10,6 +10,7 @@ Application web installable (PWA), utilisable sur ordinateur et sur smartphone.
 - **Planning** : vue par semaine, créneaux par employé et par poste, contrôle des conflits
   (double affectation, poste non tenu, horaires incohérents), total d'heures, copie de la semaine précédente.
 - **Stocks** : deux familles séparées. **Bacs de glace** par parfum (compteur −1 / +1, alerte « à produire ») et **matières premières** de production (entrées et sorties avec motif, alerte « à commander »), plus l'historique des mouvements.
+- **Thème clair / sombre** : bouton lune / soleil en haut de l'écran (suit le système par défaut).
 - **Paramètres** : export et import des données (JSON), données d'exemple, remise à zéro.
 
 Les données sont enregistrées **dans le navigateur de l'appareil** (pas encore de serveur) :
