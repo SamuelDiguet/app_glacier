@@ -5,31 +5,90 @@
  */
 
 /* ---------- Palette et variables ---------- */
+/*
+ * Thème clair par défaut. Le thème sombre s'applique :
+ * - automatiquement si le système est en sombre et qu'aucun choix n'a été fait ;
+ * - ou quand l'utilisateur le choisit (attribut data-theme sur <html>,
+ *   posé par src/lib/theme.ts et le bouton lune / soleil).
+ */
 :root {
   --rose: #e85d75;
   --rose-fonce: #c62f4b;
   --rose-clair: #fde4e9;
-  --creme: #fff8f3;
+  --fond: #fff8f3;
+  --surface: #ffffff;
+  --blanc: #ffffff; /* texte sur la couleur d'accent, identique dans les deux thèmes */
   --texte: #2d2326;
   --texte-doux: #7a6a6f;
   --bordure: #eadfd9;
-  --blanc: #ffffff;
   --vente: #2f80c2;
   --vente-clair: #e3f0fb;
   --production: #8a5a2b;
   --production-clair: #f6ebdd;
   --vert: #2e8b57;
+  --vert-clair: #e6f4ec;
   --alerte: #d9480f;
   --alerte-clair: #fff0e6;
-  --rayon: 14px;
+  --alerte-bordure: #f5c4a6;
+  --voile: rgb(45 35 38 / 45%);
   --ombre: 0 1px 3px rgb(45 35 38 / 8%), 0 4px 14px rgb(45 35 38 / 5%);
+  --rayon: 14px;
   --hauteur-nav: 64px;
 
   color-scheme: light;
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   color: var(--texte);
-  background: var(--creme);
+  background: var(--fond);
   -webkit-text-size-adjust: 100%;
+}
+
+/* Valeurs du thème sombre, partagées par les deux sélecteurs ci-dessous. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --rose: #dc5c74;
+    --rose-fonce: #f59aab;
+    --rose-clair: #4a2630;
+    --fond: #1a1416;
+    --surface: #251d20;
+    --texte: #f3e9ec;
+    --texte-doux: #b3a1a7;
+    --bordure: #3b2f33;
+    --vente: #7db8ea;
+    --vente-clair: #1d3044;
+    --production: #dcae7a;
+    --production-clair: #3a2c1d;
+    --vert: #63c48f;
+    --vert-clair: #18352a;
+    --alerte: #ff8f57;
+    --alerte-clair: #3a2216;
+    --alerte-bordure: #6b3a22;
+    --voile: rgb(0 0 0 / 60%);
+    --ombre: 0 1px 3px rgb(0 0 0 / 40%);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='dark'] {
+  --rose: #dc5c74;
+  --rose-fonce: #f59aab;
+  --rose-clair: #4a2630;
+  --fond: #1a1416;
+  --surface: #251d20;
+  --texte: #f3e9ec;
+  --texte-doux: #b3a1a7;
+  --bordure: #3b2f33;
+  --vente: #7db8ea;
+  --vente-clair: #1d3044;
+  --production: #dcae7a;
+  --production-clair: #3a2c1d;
+  --vert: #63c48f;
+  --vert-clair: #18352a;
+  --alerte: #ff8f57;
+  --alerte-clair: #3a2216;
+  --alerte-bordure: #6b3a22;
+  --voile: rgb(0 0 0 / 60%);
+  --ombre: 0 1px 3px rgb(0 0 0 / 40%);
+  color-scheme: dark;
 }
 
 * {
@@ -38,7 +97,7 @@
 
 body {
   margin: 0;
-  background: var(--creme);
+  background: var(--fond);
 }
 
 h1,
@@ -91,7 +150,7 @@ a {
   z-index: 10;
   display: flex;
   justify-content: space-around;
-  background: var(--blanc);
+  background: var(--surface);
   border-top: 1px solid var(--bordure);
   padding-bottom: env(safe-area-inset-bottom);
 }
@@ -160,7 +219,7 @@ a {
   }
 
   .lien-nav:hover {
-    background: var(--creme);
+    background: var(--fond);
   }
 
   .lien-nav.active {
@@ -203,7 +262,7 @@ a {
   padding: 0 16px;
   border-radius: 999px;
   border: 1px solid var(--bordure);
-  background: var(--blanc);
+  background: var(--surface);
   font-weight: 600;
 }
 
@@ -214,7 +273,7 @@ a {
 }
 
 .bouton-principal:hover {
-  background: var(--rose-fonce);
+  filter: brightness(0.92);
 }
 
 .bouton-danger {
@@ -235,7 +294,7 @@ a {
   height: 44px;
   border-radius: 50%;
   border: 1px solid var(--bordure);
-  background: var(--blanc);
+  background: var(--surface);
   flex-shrink: 0;
 }
 
@@ -276,14 +335,14 @@ select:focus-visible {
   padding: 0 14px;
   border-radius: 999px;
   border: 1px solid var(--bordure);
-  background: var(--blanc);
+  background: var(--surface);
   font-size: 0.9rem;
 }
 
 .puce-active {
   background: var(--texte);
   border-color: var(--texte);
-  color: var(--blanc);
+  color: var(--fond);
 }
 
 .recherche {
@@ -292,7 +351,7 @@ select:focus-visible {
   padding: 0 14px;
   border-radius: 999px;
   border: 1px solid var(--bordure);
-  background: var(--blanc);
+  background: var(--surface);
 }
 
 /* Bascule à deux options (onglets, entrée/sortie). */
@@ -316,7 +375,7 @@ select:focus-visible {
 }
 
 .bascule button.actif {
-  background: var(--blanc);
+  background: var(--surface);
   color: var(--texte);
   box-shadow: var(--ombre);
 }
@@ -340,7 +399,7 @@ select:focus-visible {
 
 /* ---------- Cartes et listes ---------- */
 .carte {
-  background: var(--blanc);
+  background: var(--surface);
   border: 1px solid var(--bordure);
   border-radius: var(--rayon);
   box-shadow: var(--ombre);
@@ -451,7 +510,7 @@ select:focus-visible {
   border-radius: 999px;
   font-size: 0.75rem;
   font-weight: 600;
-  background: var(--creme);
+  background: var(--fond);
   color: var(--texte-doux);
   border: 1px solid var(--bordure);
 }
@@ -470,7 +529,7 @@ select:focus-visible {
 
 .badge-statut-manager {
   background: var(--texte);
-  color: var(--blanc);
+  color: var(--fond);
   border-color: transparent;
 }
 
@@ -551,7 +610,7 @@ select:focus-visible {
 }
 
 .jour {
-  background: var(--blanc);
+  background: var(--surface);
   border: 1px solid var(--bordure);
   border-radius: var(--rayon);
   padding: 8px;
@@ -637,14 +696,14 @@ select:focus-visible {
   align-items: center;
   gap: 10px;
   padding: 10px 10px 10px 14px;
-  background: var(--blanc);
+  background: var(--surface);
   border: 1px solid var(--bordure);
   border-radius: var(--rayon);
 }
 
 .produit.en-alerte {
   background: var(--alerte-clair);
-  border-color: #f5c4a6;
+  border-color: var(--alerte-bordure);
 }
 
 .produit-infos {
@@ -688,7 +747,7 @@ select:focus-visible {
 .fenetre {
   border: none;
   padding: 0;
-  background: var(--blanc);
+  background: var(--surface);
   color: var(--texte);
   width: 100%;
   max-width: 100%;
@@ -698,7 +757,7 @@ select:focus-visible {
 }
 
 .fenetre::backdrop {
-  background: rgb(45 35 38 / 45%);
+  background: var(--voile);
 }
 
 @media (min-width: 600px) {
@@ -746,7 +805,7 @@ select:focus-visible {
   padding: 0 12px;
   border: 1px solid var(--bordure);
   border-radius: 10px;
-  background: var(--blanc);
+  background: var(--surface);
   font-weight: 400;
   width: 100%;
 }
@@ -817,7 +876,7 @@ ul.erreur {
 .info {
   padding: 10px 12px;
   border-radius: 10px;
-  background: #e6f4ec;
+  background: var(--vert-clair);
   color: var(--vert);
 }
 
@@ -852,7 +911,7 @@ ul.erreur {
   align-items: center;
   gap: 8px;
   padding: 12px 10px;
-  background: var(--blanc);
+  background: var(--surface);
   border: 1px solid var(--bordure);
   border-radius: var(--rayon);
   text-align: center;
@@ -860,7 +919,7 @@ ul.erreur {
 
 .bac.en-alerte {
   background: var(--alerte-clair);
-  border-color: #f5c4a6;
+  border-color: var(--alerte-bordure);
 }
 
 .bac-nom {
@@ -914,4 +973,33 @@ ul.erreur {
 /* Titre secondaire à l'intérieur d'une carte (ex. deux listes dans un même bloc). */
 .sous-bloc {
   margin-top: 16px;
+}
+
+/* ---------- Barre du haut : marque (mobile) et bouton de thème ---------- */
+.barre-haut {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.barre-haut .marque {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  padding: 0;
+}
+
+@media (min-width: 900px) {
+  /* Sur ordinateur, la marque est déjà dans la barre latérale. */
+  .barre-haut {
+    justify-content: flex-end;
+    margin-bottom: 0;
+  }
+
+  .barre-haut .marque {
+    display: none;
+  }
 }

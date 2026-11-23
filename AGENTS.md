@@ -32,6 +32,7 @@ Application de gestion pour un glacier : plannings, stocks et employés.
 - **PWA** : React 19 + TypeScript, construite avec **Vite** ; manifeste et service worker générés par `vite-plugin-pwa` (installable, fonctionne hors ligne).
 - **Routage** : `react-router-dom` en mode *hash* (`#/planning`), qui fonctionne sans configuration serveur, sur GitHub Pages comme dans Capacitor.
 - **Styles** : CSS simple (`src/styles.css`) avec variables, mobile first ; pas de framework CSS.
+- **Thèmes** : clair et sombre, définis uniquement par les variables CSS (`:root`, `@media (prefers-color-scheme: dark)` et `[data-theme='dark']`). Le bouton lune / soleil (`src/components/BoutonTheme.tsx`, logique dans `src/lib/theme.ts`) mémorise le choix ; sans choix, l'app suit le système. Toute nouvelle couleur doit être une variable définie dans les deux thèmes.
 - **Données (v1)** : stockage local du navigateur (`localStorage`), isolé dans `src/data/stockage.ts`. Export/import JSON depuis la page Paramètres. Pas de back-end pour l'instant : le jour où il en faudra un (partage entre appareils, comptes), seul ce module sera à remplacer.
 - **Format des données** : versionné (`VERSION_DONNEES` dans `src/data/stockage.ts`). Toute évolution de structure incrémente la version et ajoute une étape dans `migrerDonnees`, pour ne pas perdre les données déjà saisies.
 - **Tests** : Vitest, sur les règles métier de `src/lib/` et le reducer.
