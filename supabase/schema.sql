@@ -77,6 +77,12 @@ as $$
   );
 $$;
 
+-- Droits explicites : le projet n'accorde pas automatiquement l'accès API
+-- aux nouvelles tables, et le rôle anonyme (non connecté) n'a accès à rien.
+grant usage on schema public to authenticated;
+revoke execute on function public.est_proprietaire() from public, anon;
+grant execute on function public.est_proprietaire() to authenticated;
+
 -- Active la sécurité par ligne et n'autorise que les propriétaires.
 do $$
 declare
