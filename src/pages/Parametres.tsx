@@ -1,16 +1,16 @@
 /**
- * Page Paramètres : compte et propriétaires (mode connecté), sauvegarde et
+ * Page Paramètres : mon compte (mode connecté), sauvegarde et
  * restauration des données (fichier JSON), données d'exemple et remise à zéro.
  *
  * En mode local, les données sont stockées dans le navigateur : l'export
  * est le moyen de les sauvegarder ou de les transférer vers un autre appareil.
- * En mode connecté, elles sont sur le serveur et partagées entre propriétaires.
+ * En mode connecté, elles sont sur le serveur, propres à chaque compte.
  */
 import { useRef, useState, type ChangeEvent } from 'react';
 import { useDonnees } from '../data/DonneesContext';
 import { useSession } from '../data/SessionContext';
 import { chargerDonnees, donneesVides, estDonneesValides, migrerDonnees } from '../data/stockage';
-import { SectionCompte, SectionProprietaires } from './ParametresCompte';
+import { SectionCompte } from './ParametresCompte';
 import { donneesExemple } from '../data/exemple';
 import { aujourdhui } from '../lib/dates';
 
@@ -62,13 +62,12 @@ export function Parametres() {
       </header>
 
       {session && <SectionCompte session={session} />}
-      {session && <SectionProprietaires session={session} />}
 
       <div className="carte bloc">
         <h2>Sauvegarde</h2>
         <p>
           {session
-            ? 'Les données sont enregistrées sur le serveur et partagées entre les propriétaires. Un export permet d’en garder une copie de sécurité.'
+            ? 'Les données de votre compte sont enregistrées sur le serveur : vous les retrouvez sur tous vos appareils. Un export permet d’en garder une copie de sécurité.'
             : 'Les données sont enregistrées sur cet appareil, dans le navigateur. Exportez-les régulièrement pour les sauvegarder ou les transférer vers un autre appareil.'}
         </p>
         <div className="actions">
@@ -99,22 +98,20 @@ export function Parametres() {
       <div className="carte bloc">
         <h2>Réinitialisation</h2>
         <div className="actions">
-          {!session && (
-            <button
-              className="bouton"
-              onClick={() =>
-                remplacer('Remplacer les données actuelles par les données d’exemple ?', donneesExemple(), 'Données d’exemple chargées.')
-              }
-            >
-              Charger les données d'exemple
-            </button>
-          )}
+          <button
+            className="bouton"
+            onClick={() =>
+              remplacer('Remplacer les données actuelles par les données d’exemple ?', donneesExemple(), 'Données d’exemple chargées.')
+            }
+          >
+            Charger les données d'exemple
+          </button>
           <button
             className="bouton bouton-danger"
             onClick={() =>
               remplacer(
                 session
-                  ? 'Effacer définitivement toutes les données du serveur, pour tous les propriétaires ?'
+                  ? 'Effacer définitivement toutes les données de votre compte, sur tous vos appareils ?'
                   : 'Effacer définitivement toutes les données ?',
                 donneesVides(), 'Toutes les données ont été effacées.')
             }

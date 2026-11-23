@@ -1,8 +1,8 @@
 # Mise en place de Supabase
 
 L'application utilise [Supabase](https://supabase.com) pour les comptes des
-propriétaires et pour stocker les données partagées (employés, planning,
-stocks). Sans configuration Supabase, l'application reste en **mode local**
+propriétaires et pour stocker leurs données (employés, planning, stocks).
+Chaque compte a son propre espace : il ne voit que ses données. Sans configuration Supabase, l'application reste en **mode local**
 (données dans le navigateur, sans connexion).
 
 ## 1. Créer le projet
@@ -14,14 +14,6 @@ stocks). Sans configuration Supabase, l'application reste en **mode local**
 
 1. Dans le projet : **SQL Editor** > **New query**.
 2. Coller le contenu de [`schema.sql`](schema.sql) puis **Run**.
-3. Ajouter le premier propriétaire (remplacer l'adresse) :
-
-   ```sql
-   insert into public.proprietaires (email) values ('adresse@exemple.fr') on conflict do nothing;
-   ```
-
-   Les propriétaires suivants s'ajoutent ensuite depuis l'application
-   (Paramètres > Propriétaires).
 
 ## 3. Réglages de connexion
 
@@ -46,9 +38,10 @@ Dans **Authentication** :
 
 **Envoi des e-mails** : le service d'e-mail fourni par défaut par Supabase
 n'envoie qu'aux membres de l'équipe du projet Supabase, et seulement quelques
-e-mails par heure. Pour d'autres propriétaires, soit les inviter dans
-l'équipe du projet (Organization > Team), soit brancher un service SMTP
-(Authentication > Emails > SMTP Settings, par exemple Brevo ou Resend).
+e-mails par heure. Pour que d'autres personnes puissent créer un compte,
+brancher un service SMTP (Authentication > Emails > SMTP Settings, par
+exemple Brevo ou Resend), ou les inviter dans l'équipe du projet
+(Organization > Team).
 
 ## 4. Brancher l'application
 

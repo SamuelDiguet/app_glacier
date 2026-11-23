@@ -1,5 +1,6 @@
 /**
- * Échanges avec la base partagée (Supabase) en mode connecté.
+ * Échanges avec la base (Supabase) en mode connecté. Chaque compte n'y voit
+ * que ses propres lignes (règles RLS de supabase/schema.sql).
  *
  * L'application garde toutes les données en mémoire, comme en mode local.
  * À chaque modification, on compare l'état avant / après pour n'envoyer au
@@ -37,9 +38,14 @@ export function versLigne(element: object): Record<string, unknown> {
   return renommer(element, COLONNES);
 }
 
-/** Convertit une ligne de la base en élément de l'application. */
+/**
+ * Convertit une ligne de la base en élément de l'application. La colonne
+ * `proprietaire` (compte auquel appartient la ligne) est gérée par le serveur
+ * et n'existe pas côté application : on la retire.
+ */
 export function depuisLigne<T>(ligne: object): T {
-  return renommer(ligne, CHAMPS) as T;
+  const { proprietaire: _proprietaire, ...donnees } = ligne as Record<string, unknown>;
+  return renommer(donnees, CHAMPS) as T;
 }
 
 /** Modifications à envoyer pour une collection. */
@@ -132,7 +138,8 @@ export async function chargerDonneesDistantes(client: SupabaseClient): Promise<D
 export async function envoyerChangements(client: SupabaseClient, changements: Changements): Promise<void> {
   for (const collection of COLLECTIONS) {
     for (const paquet of enPaquets(changements[collection].enregistrer, 500)) {
-      verifier((await client.from(collection).upsert(paquet)).error);
+      // `proprietaire` est rempli par le serveur (compte connecté) : la clé est (proprietaire, id).
+      verifier((await client.from(collection).upsert(paquet, { onConflict: 'proprietaire,id' })).error);
     }
   }
   for (const collection of [...COLLECTIONS].reverse()) {

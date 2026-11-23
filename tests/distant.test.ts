@@ -31,6 +31,11 @@ describe('conversion des champs', () => {
     expect('seuilAlerte' in ligne).toBe(false);
     expect(depuisLigne<Produit>(ligne)).toEqual(vanille);
   });
+
+  it('retire la colonne proprietaire, gérée par le serveur', () => {
+    const ligne = { ...versLigne(vanille), proprietaire: 'uuid-du-compte' };
+    expect(depuisLigne<Produit>(ligne)).toEqual(vanille);
+  });
 });
 
 describe('calcul des changements', () => {

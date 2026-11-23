@@ -1,11 +1,10 @@
 /**
  * Écrans de passage du mode connecté, affichés à la place de l'application :
- * chargement de la session, choix d'un nouveau mot de passe et compte non
- * autorisé.
+ * chargement de la session et choix d'un nouveau mot de passe.
  */
 import { useState, type FormEvent } from 'react';
 import { useSession } from '../data/SessionContext';
-import { changerMotDePasse, deconnecter } from '../data/comptes';
+import { changerMotDePasse } from '../data/comptes';
 import { EcranCentre } from '../components/EcranCentre';
 import { LONGUEUR_MIN_MOT_DE_PASSE } from './Connexion';
 
@@ -14,23 +13,6 @@ export function EcranChargement() {
   return (
     <EcranCentre titre="Chargement…">
       <p className="sous-titre">Connexion au serveur en cours.</p>
-    </EcranCentre>
-  );
-}
-
-/** Compte connecté mais absent de la liste des propriétaires. */
-export function CompteNonAutorise() {
-  const session = useSession()!;
-  return (
-    <EcranCentre titre="Compte non autorisé">
-      <p>
-        Le compte <strong>{session.session?.user.email}</strong> est bien créé, mais il n'a pas encore accès aux données du
-        glacier.
-      </p>
-      <p>Demandez à un propriétaire de vous ajouter dans Paramètres &gt; Propriétaires, puis reconnectez-vous.</p>
-      <button className="bouton" onClick={() => deconnecter(session.client)}>
-        Se déconnecter
-      </button>
     </EcranCentre>
   );
 }

@@ -4,8 +4,8 @@
  *
  * - Mode local (Supabase non configuré) : l'application s'ouvre directement,
  *   données dans le navigateur.
- * - Mode connecté : il faut se connecter avec un compte propriétaire ; les
- *   données viennent alors du serveur partagé.
+ * - Mode connecté : on arrive sur la page de connexion (ou de création de
+ *   compte) ; chaque compte retrouve ensuite ses propres données sur le serveur.
  *
  * On utilise un routeur « hash » (#/planning…) : il fonctionne sans
  * configuration serveur, sur GitHub Pages comme dans une app Capacitor.
@@ -21,7 +21,7 @@ import { Stocks } from './pages/Stocks';
 import { Employes } from './pages/Employes';
 import { Parametres } from './pages/Parametres';
 import { Connexion } from './pages/Connexion';
-import { CompteNonAutorise, EcranChargement, NouveauMotDePasse } from './pages/AccesConnecte';
+import { EcranChargement, NouveauMotDePasse } from './pages/AccesConnecte';
 
 /** Pages de l'application. */
 function Pages() {
@@ -43,12 +43,10 @@ function Pages() {
 
 /** Mode connecté : affiche l'écran qui correspond à l'état de la session. */
 function AppConnectee() {
-  const { client, session, chargement, autorise, reinitialisation } = useSession()!;
+  const { client, session, chargement, reinitialisation } = useSession()!;
   if (chargement) return <EcranChargement />;
   if (!session) return <Connexion />;
   if (reinitialisation) return <NouveauMotDePasse />;
-  if (autorise === null) return <EcranChargement />;
-  if (!autorise) return <CompteNonAutorise />;
   // La clé force un état neuf si un autre compte se connecte.
   return (
     <DonneesProvider key={session.user.id} client={client}>

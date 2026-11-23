@@ -11,10 +11,10 @@ Application web installable (PWA), utilisable sur ordinateur et sur smartphone.
   (double affectation, poste non tenu, horaires incohérents), total d'heures, copie de la semaine précédente.
 - **Stocks** : deux familles séparées. **Bacs de glace** par parfum (compteur −1 / +1, alerte « à produire ») et **matières premières** de production (entrées et sorties avec motif, alerte « à commander »), plus l'historique des mouvements.
 - **Thème clair / sombre** : bouton lune / soleil en haut de l'écran (suit le système par défaut).
-- **Connexion des propriétaires** : compte par e-mail et mot de passe (téléphone facultatif), confirmation par code reçu par e-mail, mot de passe oublié. Seuls les propriétaires autorisés accèdent aux données, qu'ils retrouvent sur tous leurs appareils.
-- **Paramètres** : mon compte, liste des propriétaires, export et import des données (JSON), remise à zéro.
+- **Comptes** : page de connexion à l'arrivée, création de compte par e-mail et mot de passe (téléphone facultatif), confirmation par code reçu par e-mail, mot de passe oublié. Chaque compte a son propre espace, retrouvé sur tous ses appareils.
+- **Paramètres** : mon compte, export et import des données (JSON), données d'exemple, remise à zéro.
 
-Les données sont enregistrées sur un serveur **Supabase** partagé entre les propriétaires
+Les données sont enregistrées sur un serveur **Supabase**, séparées par compte
 (mise en place : [supabase/README.md](supabase/README.md)). Sans configuration Supabase,
 l'application fonctionne en **mode local** : données dans le navigateur, sans connexion.
 
