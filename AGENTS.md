@@ -26,6 +26,8 @@ Application de gestion pour un glacier : plannings, stocks et employés.
 3. **Employés** : ajouter des employés et leur attribuer des postes.
    - **Postes** : vente, production.
    - **Statuts** : standard, pâtissier, manager — **cumulables** (un employé peut en avoir plusieurs, au moins un).
+   - **Âge** : majeur ou mineur (badge « Mineur » sur la liste).
+   - **Notes** : champ libre par employé (disponibilités, remarques).
 
 ## Stack technique
 

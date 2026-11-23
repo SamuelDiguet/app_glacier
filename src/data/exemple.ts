@@ -9,8 +9,15 @@ import { nouvelId } from '../lib/ids';
 import { VERSION_DONNEES } from './stockage';
 
 /** Construit un employé d'exemple. */
-function employe(prenom: string, nom: string, postes: Poste[], statuts: Employe['statuts']): Employe {
-  return { id: nouvelId(), prenom, nom, telephone: '', postes, statuts, actif: true };
+function employe(
+  prenom: string,
+  nom: string,
+  postes: Poste[],
+  statuts: Employe['statuts'],
+  majeur = true,
+  notes = '',
+): Employe {
+  return { id: nouvelId(), prenom, nom, telephone: '', postes, statuts, majeur, notes, actif: true };
 }
 
 /** Construit un parfum d'exemple, compté en bacs. */
@@ -29,7 +36,7 @@ export function donneesExemple(): DonneesGlacier {
     employe('Camille', 'Martin', ['vente', 'production'], ['manager']),
     employe('Lucas', 'Bernard', ['production'], ['patissier', 'manager']),
     employe('Inès', 'Petit', ['vente'], ['standard']),
-    employe('Hugo', 'Moreau', ['vente'], ['standard']),
+    employe('Hugo', 'Moreau', ['vente'], ['standard'], false, 'Étudiant, disponible le week-end et pendant les vacances scolaires.'),
   ];
   const [camille, lucas, ines, hugo] = employes;
 

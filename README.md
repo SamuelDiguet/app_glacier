@@ -6,7 +6,7 @@ Application web installable (PWA), utilisable sur ordinateur et sur smartphone.
 ## Fonctionnalités (v0.2)
 
 - **Accueil** : équipe du jour, alertes de stock, heures planifiées de la semaine.
-- **Employés** : ajout, modification, postes (vente, production), statuts cumulables (standard, pâtissier, manager), activation.
+- **Employés** : ajout, modification, postes (vente, production), statuts cumulables (standard, pâtissier, manager), majeur / mineur, notes libres, activation.
 - **Planning** : vue par semaine, créneaux par employé et par poste, contrôle des conflits
   (double affectation, poste non tenu, horaires incohérents), total d'heures, copie de la semaine précédente.
 - **Stocks** : deux familles séparées. **Bacs de glace** par parfum (compteur −1 / +1, alerte « à produire ») et **matières premières** de production (entrées et sorties avec motif, alerte « à commander »), plus l'historique des mouvements.
