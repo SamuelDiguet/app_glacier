@@ -36,7 +36,8 @@ Application de gestion pour un glacier : plannings, stocks et employés.
 - **Données (v1)** : stockage local du navigateur (`localStorage`), isolé dans `src/data/stockage.ts`. Export/import JSON depuis la page Paramètres. Pas de back-end pour l'instant : le jour où il en faudra un (partage entre appareils, comptes), seul ce module sera à remplacer.
 - **Format des données** : versionné (`VERSION_DONNEES` dans `src/data/stockage.ts`). Toute évolution de structure incrémente la version et ajoute une étape dans `migrerDonnees`, pour ne pas perdre les données déjà saisies.
 - **Tests** : Vitest, sur les règles métier de `src/lib/` et le reducer.
-- **Hébergement** : dépôt public, application publiée sur GitHub Pages (https://samueldiguet.github.io/app_glacier/) par GitHub Actions à chaque fusion sur `main`.
+- **Mises à jour** : `src/lib/miseAJour.ts` enregistre le service worker et vérifie les nouvelles versions (démarrage, retour sur l'app, toutes les 30 min) ; la page se recharge seule quand une version est installée.
+- **Hébergement** : dépôt public, application publiée sur GitHub Pages (https://samueldiguet.github.io/app_glacier/) par GitHub Actions à chaque fusion sur `main`. Dans Settings > Pages, la source doit être « GitHub Actions » (et non « Deploy from a branch », qui publierait le code source brut).
 - **Commandes** : `npm run dev`, `npm test`, `npm run build`.
 
 ## Workflow GitHub

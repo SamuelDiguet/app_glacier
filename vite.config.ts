@@ -19,6 +19,8 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      // Enregistrement fait dans src/lib/miseAJour.ts (vérifications régulières).
+      injectRegister: false,
       includeAssets: ['icon.svg', 'apple-touch-icon.png'],
       manifest: {
         name: 'Gestion glacier',
