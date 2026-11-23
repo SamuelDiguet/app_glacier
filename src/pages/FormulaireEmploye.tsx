@@ -85,7 +85,7 @@ export function FormulaireEmploye({ employe, onEnregistrer, onSupprimer }: Props
       </fieldset>
 
       <fieldset>
-        <legend>Statuts * (plusieurs possibles)</legend>
+        <legend>Statuts *</legend>
         <div className="choix">
           {STATUTS.map((statut) => (
             <label key={statut} className="case">
