@@ -1,0 +1,834 @@
+/*
+ * Styles globaux de l'application.
+ * Approche « mobile first » : les règles de base visent le smartphone,
+ * les requêtes @media ajoutent la mise en page ordinateur (≥ 900 px).
+ */
+
+/* ---------- Palette et variables ---------- */
+:root {
+  --rose: #e85d75;
+  --rose-fonce: #c62f4b;
+  --rose-clair: #fde4e9;
+  --creme: #fff8f3;
+  --texte: #2d2326;
+  --texte-doux: #7a6a6f;
+  --bordure: #eadfd9;
+  --blanc: #ffffff;
+  --vente: #2f80c2;
+  --vente-clair: #e3f0fb;
+  --production: #8a5a2b;
+  --production-clair: #f6ebdd;
+  --vert: #2e8b57;
+  --alerte: #d9480f;
+  --alerte-clair: #fff0e6;
+  --rayon: 14px;
+  --ombre: 0 1px 3px rgb(45 35 38 / 8%), 0 4px 14px rgb(45 35 38 / 5%);
+  --hauteur-nav: 64px;
+
+  color-scheme: light;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color: var(--texte);
+  background: var(--creme);
+  -webkit-text-size-adjust: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--creme);
+}
+
+h1,
+h2 {
+  margin: 0;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: 1.6rem;
+}
+
+h2 {
+  font-size: 1.05rem;
+  margin-bottom: 0.75rem;
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: var(--rose-fonce);
+}
+
+/* ---------- Structure : navigation + contenu ---------- */
+.contenu {
+  padding: 16px 16px calc(var(--hauteur-nav) + 24px + env(safe-area-inset-bottom));
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Sur mobile : barre d'onglets fixée en bas. */
+.navigation {
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-around;
+  background: var(--blanc);
+  border-top: 1px solid var(--bordure);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.marque {
+  display: none;
+}
+
+.lien-nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 2px;
+  min-height: var(--hauteur-nav);
+  justify-content: center;
+  font-size: 0.7rem;
+  color: var(--texte-doux);
+  text-decoration: none;
+}
+
+.lien-nav.active {
+  color: var(--rose-fonce);
+  font-weight: 600;
+}
+
+/* Sur ordinateur : barre latérale à gauche. */
+@media (min-width: 900px) {
+  .app {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: 100vh;
+  }
+
+  .navigation {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 4px;
+    padding: 20px 12px;
+    border-top: none;
+    border-right: 1px solid var(--bordure);
+  }
+
+  .marque {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 1.15rem;
+    padding: 0 10px 20px;
+  }
+
+  .lien-nav {
+    flex: none;
+    flex-direction: row;
+    gap: 12px;
+    min-height: 0;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    justify-content: flex-start;
+  }
+
+  .lien-nav:hover {
+    background: var(--creme);
+  }
+
+  .lien-nav.active {
+    background: var(--rose-clair);
+  }
+
+  .contenu {
+    padding: 32px;
+    width: 100%;
+  }
+}
+
+/* ---------- En-têtes de page ---------- */
+.entete-page {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.sous-titre {
+  margin: 4px 0 0;
+  color: var(--texte-doux);
+}
+
+/* Majuscule sur la première lettre seulement (« lundi » → « Lundi »). */
+.sous-titre::first-letter,
+.jour-entete span::first-letter {
+  text-transform: uppercase;
+}
+
+/* ---------- Boutons ---------- */
+.bouton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid var(--bordure);
+  background: var(--blanc);
+  font-weight: 600;
+}
+
+.bouton-principal {
+  background: var(--rose);
+  border-color: var(--rose);
+  color: var(--blanc);
+}
+
+.bouton-principal:hover {
+  background: var(--rose-fonce);
+}
+
+.bouton-danger {
+  color: var(--rose-fonce);
+  border-color: var(--rose-clair);
+}
+
+.bouton-discret {
+  border-color: transparent;
+  background: transparent;
+}
+
+.bouton-icone {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--bordure);
+  background: var(--blanc);
+  flex-shrink: 0;
+}
+
+.bouton-icone.petit {
+  width: 32px;
+  height: 32px;
+}
+
+.bouton-icone.entree {
+  color: var(--vert);
+}
+
+.bouton-icone.sortie {
+  color: var(--rose-fonce);
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--rose);
+  outline-offset: 2px;
+}
+
+/* ---------- Filtres (puces) ---------- */
+.filtres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.puce {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--bordure);
+  background: var(--blanc);
+  font-size: 0.9rem;
+}
+
+.puce-active {
+  background: var(--texte);
+  border-color: var(--texte);
+  color: var(--blanc);
+}
+
+.recherche {
+  flex: 1 1 200px;
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--bordure);
+  background: var(--blanc);
+}
+
+/* Bascule à deux options (onglets, entrée/sortie). */
+.bascule {
+  display: flex;
+  padding: 4px;
+  gap: 4px;
+  border-radius: 999px;
+  background: var(--bordure);
+  margin-bottom: 16px;
+}
+
+.bascule button {
+  flex: 1;
+  min-height: 38px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  font-weight: 600;
+  color: var(--texte-doux);
+}
+
+.bascule button.actif {
+  background: var(--blanc);
+  color: var(--texte);
+  box-shadow: var(--ombre);
+}
+
+.bascule button.actif.entree {
+  color: var(--vert);
+}
+
+.bascule button.actif.sortie {
+  color: var(--rose-fonce);
+}
+
+.onglets {
+  max-width: 360px;
+}
+
+/* ---------- Cartes et listes ---------- */
+.carte {
+  background: var(--blanc);
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon);
+  box-shadow: var(--ombre);
+}
+
+.bloc {
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.carte-cliquable {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  text-align: left;
+}
+
+.carte-cliquable:hover {
+  border-color: var(--rose);
+}
+
+.carte-texte {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.carte-texte small {
+  color: var(--texte-doux);
+}
+
+.inactif {
+  opacity: 0.55;
+}
+
+.grille-cartes {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--rose-clair);
+  color: var(--rose-fonce);
+  font-weight: 700;
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+.liste-simple li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--bordure);
+}
+
+.liste-simple li:last-child {
+  border-bottom: none;
+}
+
+.liste-simple.carte {
+  padding: 4px 16px;
+}
+
+.vide {
+  color: var(--texte-doux);
+  margin: 8px 0;
+}
+
+.lien-suite {
+  display: inline-block;
+  margin-top: 12px;
+  font-weight: 600;
+}
+
+.entree {
+  color: var(--vert);
+}
+
+.sortie {
+  color: var(--rose-fonce);
+}
+
+.en-alerte {
+  color: var(--alerte);
+}
+
+/* ---------- Badges ---------- */
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: var(--creme);
+  color: var(--texte-doux);
+  border: 1px solid var(--bordure);
+}
+
+.badge-vente {
+  background: var(--vente-clair);
+  color: var(--vente);
+  border-color: transparent;
+}
+
+.badge-production {
+  background: var(--production-clair);
+  color: var(--production);
+  border-color: transparent;
+}
+
+.badge-statut-manager {
+  background: var(--texte);
+  color: var(--blanc);
+  border-color: transparent;
+}
+
+.badge-statut-patissier {
+  background: var(--rose-clair);
+  color: var(--rose-fonce);
+  border-color: transparent;
+}
+
+/* ---------- Accueil ---------- */
+.chiffres {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.chiffre {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 12px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.chiffre strong {
+  font-size: 1.4rem;
+}
+
+.chiffre span {
+  font-size: 0.8rem;
+  color: var(--texte-doux);
+}
+
+.chiffre-alerte strong {
+  color: var(--alerte);
+}
+
+@media (min-width: 900px) {
+  .colonnes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    align-items: start;
+  }
+
+  .chiffre strong {
+    font-size: 1.8rem;
+  }
+}
+
+/* ---------- Planning ---------- */
+.navigation-semaine {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+/* Mobile : les jours sont empilés. Ordinateur : 7 colonnes. */
+.semaine {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+@media (min-width: 900px) {
+  .semaine {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .jour {
+    min-height: 220px;
+  }
+}
+
+.jour {
+  background: var(--blanc);
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.jour-courant {
+  border-color: var(--rose);
+  box-shadow: 0 0 0 2px var(--rose-clair);
+}
+
+.jour-entete {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding-left: 4px;
+}
+
+.jour-vide {
+  margin: 0;
+  padding-left: 4px;
+  font-size: 0.85rem;
+  color: var(--texte-doux);
+}
+
+.creneau {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-left: 4px solid;
+  border-radius: 8px;
+  text-align: left;
+  font-size: 0.85rem;
+}
+
+.creneau small {
+  opacity: 0.8;
+}
+
+.creneau-vente {
+  background: var(--vente-clair);
+  border-color: var(--vente);
+}
+
+.creneau-production {
+  background: var(--production-clair);
+  border-color: var(--production);
+}
+
+/* ---------- Stocks ---------- */
+.groupe {
+  margin-bottom: 20px;
+}
+
+.groupe h2 {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--texte-doux);
+}
+
+.liste-produits {
+  display: grid;
+  gap: 8px;
+}
+
+@media (min-width: 900px) {
+  .liste-produits {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.produit {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 10px 10px 14px;
+  background: var(--blanc);
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon);
+}
+
+.produit.en-alerte {
+  background: var(--alerte-clair);
+  border-color: #f5c4a6;
+}
+
+.produit-infos {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  border: none;
+  background: none;
+  padding: 0;
+  text-align: left;
+  color: var(--texte);
+}
+
+.produit-infos small {
+  color: var(--texte-doux);
+}
+
+.produit-quantite {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  white-space: nowrap;
+}
+
+.produit-quantite small {
+  font-weight: 400;
+  font-size: 0.8rem;
+}
+
+.produit-actions {
+  display: flex;
+  gap: 6px;
+}
+
+/* ---------- Fenêtre modale ---------- */
+.fenetre {
+  border: none;
+  padding: 0;
+  background: var(--blanc);
+  color: var(--texte);
+  width: 100%;
+  max-width: 100%;
+  max-height: 92vh;
+  margin: auto 0 0;
+  border-radius: 20px 20px 0 0;
+}
+
+.fenetre::backdrop {
+  background: rgb(45 35 38 / 45%);
+}
+
+@media (min-width: 600px) {
+  .fenetre {
+    max-width: 480px;
+    margin: auto;
+    border-radius: 20px;
+  }
+}
+
+.fenetre-contenu {
+  padding: 16px 20px calc(20px + env(safe-area-inset-bottom));
+}
+
+.fenetre-entete {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.fenetre-entete h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+/* ---------- Formulaires ---------- */
+.formulaire {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.formulaire label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.formulaire input:not([type='checkbox'], [type='radio']),
+.formulaire select {
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--bordure);
+  border-radius: 10px;
+  background: var(--blanc);
+  font-weight: 400;
+  width: 100%;
+}
+
+.ligne-champs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+legend {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.choix {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.formulaire label.case {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  font-weight: 400;
+}
+
+.choix .case {
+  padding: 8px 12px;
+  border: 1px solid var(--bordure);
+  border-radius: 999px;
+}
+
+.case input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--rose);
+}
+
+.aide {
+  margin: -6px 0 0;
+  font-size: 0.85rem;
+  color: var(--texte-doux);
+}
+
+.erreur {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--rose-clair);
+  color: var(--rose-fonce);
+  font-size: 0.9rem;
+}
+
+ul.erreur {
+  padding-left: 28px;
+  list-style: disc;
+}
+
+.info {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #e6f4ec;
+  color: var(--vert);
+}
+
+.actions-formulaire {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.actions-formulaire .bouton-danger {
+  margin-right: auto;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
