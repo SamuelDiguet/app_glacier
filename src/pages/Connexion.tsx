@@ -21,7 +21,6 @@ export function Connexion() {
   const [etape, setEtape] = useState<Etape>('connexion');
   const [email, setEmail] = useState('');
   const [motDePasse, setMotDePasse] = useState('');
-  const [telephone, setTelephone] = useState('');
   const [code, setCode] = useState('');
   // Au retour d'un lien reçu par e-mail, la session fournit le message à afficher.
   const [erreur, setErreur] = useState(session.messageLien?.erreur ? session.messageLien.texte : '');
@@ -72,7 +71,7 @@ export function Connexion() {
           return setErreur(`Le mot de passe doit faire au moins ${LONGUEUR_MIN_MOT_DE_PASSE} caractères.`);
         }
         return executer(async () => {
-          await inscrire(client, email, motDePasse, telephone);
+          await inscrire(client, email, motDePasse);
           aller(
             'confirmation',
             `Un e-mail de confirmation a été envoyé à ${email.trim()}. Cliquez sur le lien qu'il contient, puis connectez-vous. S'il contient un code, saisissez-le ci-dessous.`,
@@ -133,13 +132,6 @@ export function Connexion() {
               onChange={(e) => setMotDePasse(e.target.value)}
             />
             {etape === 'inscription' && <small className="aide-champ">{LONGUEUR_MIN_MOT_DE_PASSE} caractères minimum.</small>}
-          </label>
-        )}
-
-        {etape === 'inscription' && (
-          <label>
-            Téléphone (facultatif)
-            <input type="tel" inputMode="tel" autoComplete="tel" value={telephone} onChange={(e) => setTelephone(e.target.value)} />
           </label>
         )}
 
