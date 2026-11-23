@@ -10,7 +10,7 @@ import type { DonneesGlacier, Employe, Produit, Statut } from '../types';
 const CLE_STOCKAGE = 'gestion-glacier:donnees';
 
 /** Version du format des données, à incrémenter en cas de changement de structure. */
-export const VERSION_DONNEES = 3;
+export const VERSION_DONNEES = 4;
 
 /** Données vides, utilisées au premier lancement ou après réinitialisation. */
 export function donneesVides(): DonneesGlacier {
@@ -32,7 +32,8 @@ export function estDonneesValides(valeur: unknown): valeur is DonneesGlacier {
  * Les étapes s'enchaînent : des données v1 passent par v2 puis v3.
  * - v1 → v2 : ajout de la famille des produits (les produits comptés en bacs
  *   deviennent des parfums, les autres des matières premières) ;
- * - v2 → v3 : le statut unique d'un employé devient une liste de statuts.
+ * - v2 → v3 : le statut unique d'un employé devient une liste de statuts ;
+ * - v3 → v4 : ajout de « majeur » (vrai par défaut) et des notes (vides).
  */
 export function migrerDonnees(donnees: DonneesGlacier): DonneesGlacier {
   if (donnees.version >= VERSION_DONNEES) return donnees;
@@ -42,7 +43,12 @@ export function migrerDonnees(donnees: DonneesGlacier): DonneesGlacier {
   const employes = donnees.employes.map((e): Employe => {
     // Ancien format : champ `statut` (une seule valeur).
     const { statut, ...reste } = e as Employe & { statut?: Statut };
-    return { ...reste, statuts: e.statuts ?? [statut ?? 'standard'] };
+    return {
+      ...reste,
+      statuts: e.statuts ?? [statut ?? 'standard'],
+      majeur: e.majeur ?? true,
+      notes: e.notes ?? '',
+    };
   });
   return { ...donnees, version: VERSION_DONNEES, produits, employes };
 }

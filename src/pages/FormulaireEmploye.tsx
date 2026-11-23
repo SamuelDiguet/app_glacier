@@ -15,7 +15,7 @@ interface Props {
 
 /** Valeurs par défaut d'un nouvel employé. */
 function nouvelEmploye(): Employe {
-  return { id: nouvelId(), prenom: '', nom: '', telephone: '', postes: ['vente'], statuts: ['standard'], actif: true };
+  return { id: nouvelId(), prenom: '', nom: '', telephone: '', postes: ['vente'], statuts: ['standard'], majeur: true, notes: '', actif: true };
 }
 
 /** Ajoute la valeur à la liste si elle n'y est pas, la retire sinon. */
@@ -42,7 +42,7 @@ export function FormulaireEmploye({ employe, onEnregistrer, onSupprimer }: Props
     if (!valeurs.prenom.trim()) return setErreur('Le prénom est obligatoire.');
     if (valeurs.postes.length === 0) return setErreur('Choisissez au moins un poste.');
     if (valeurs.statuts.length === 0) return setErreur('Choisissez au moins un statut.');
-    onEnregistrer({ ...valeurs, prenom: valeurs.prenom.trim(), nom: valeurs.nom.trim() });
+    onEnregistrer({ ...valeurs, prenom: valeurs.prenom.trim(), nom: valeurs.nom.trim(), notes: valeurs.notes.trim() });
   };
 
   return (
@@ -99,6 +99,30 @@ export function FormulaireEmploye({ employe, onEnregistrer, onSupprimer }: Props
           ))}
         </div>
       </fieldset>
+
+      <fieldset>
+        <legend>Âge</legend>
+        <div className="choix">
+          <label className="case">
+            <input type="radio" name="majeur" checked={valeurs.majeur} onChange={() => modifier('majeur', true)} />
+            Majeur
+          </label>
+          <label className="case">
+            <input type="radio" name="majeur" checked={!valeurs.majeur} onChange={() => modifier('majeur', false)} />
+            Mineur
+          </label>
+        </div>
+      </fieldset>
+
+      <label>
+        Notes
+        <textarea
+          rows={3}
+          value={valeurs.notes}
+          onChange={(e) => modifier('notes', e.target.value)}
+          placeholder="Disponibilités, remarques…"
+        />
+      </label>
 
       <label className="case">
         <input type="checkbox" checked={valeurs.actif} onChange={(e) => modifier('actif', e.target.checked)} />

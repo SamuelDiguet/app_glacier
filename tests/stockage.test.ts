@@ -32,6 +32,8 @@ describe('migration des données', () => {
     } as unknown as DonneesGlacier;
     const [lucas] = migrerDonnees(v2).employes;
     expect(lucas.statuts).toEqual(['patissier']);
+    expect(lucas.majeur).toBe(true);
+    expect(lucas.notes).toBe('');
     expect('statut' in lucas).toBe(false);
   });
 

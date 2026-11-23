@@ -82,9 +82,11 @@ export function Employes() {
                     {employe.postes.map((p) => (
                       <BadgePoste key={p} poste={p} />
                     ))}
+                    {!employe.majeur && <span className="badge badge-mineur">Mineur</span>}
                     {!employe.actif && <span className="badge">Inactif</span>}
                   </div>
                   {employe.telephone && <small>{employe.telephone}</small>}
+                  {employe.notes && <small className="carte-notes">{employe.notes}</small>}
                 </div>
               </button>
             </li>

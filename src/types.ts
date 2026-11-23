@@ -21,6 +21,10 @@ export interface Employe {
   postes: Poste[];
   /** Statuts de l'employé (au moins un, cumulables : ex. pâtissier et manager). */
   statuts: Statut[];
+  /** Majeur (18 ans ou plus) ou mineur : utile pour les règles d'horaires. */
+  majeur: boolean;
+  /** Notes libres sur l'employé (disponibilités, remarques…). */
+  notes: string;
   /** Un employé inactif n'est plus proposé dans les plannings. */
   actif: boolean;
 }
