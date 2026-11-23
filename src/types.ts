@@ -83,6 +83,19 @@ export interface Mouvement {
   motif: string;
 }
 
+/** Une tâche ou un rendez-vous de la liste « To do ». */
+export interface Tache {
+  id: string;
+  titre: string;
+  /** Jour au format AAAA-MM-JJ, ou chaîne vide si la tâche n'a pas de date. */
+  date: string;
+  /** Heure au format HH:MM, ou chaîne vide (sans date, l'heure est ignorée). */
+  heure: string;
+  /** Notes libres (adresse, personne à contacter…). */
+  note: string;
+  faite: boolean;
+}
+
 /** L'ensemble des données de l'application, tel qu'il est sauvegardé. */
 export interface DonneesGlacier {
   version: number;
@@ -90,4 +103,5 @@ export interface DonneesGlacier {
   creneaux: Creneau[];
   produits: Produit[];
   mouvements: Mouvement[];
+  taches: Tache[];
 }

@@ -1129,3 +1129,66 @@ ul.erreur {
   border-color: var(--alerte-bordure);
   color: var(--alerte);
 }
+
+/* ---------- Liste To do ---------- */
+.groupe-entete {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.groupe-retard h2 {
+  color: var(--alerte);
+}
+
+.liste-taches {
+  display: grid;
+  gap: 8px;
+}
+
+.tache {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon);
+}
+
+.tache-case {
+  width: 22px;
+  height: 22px;
+  margin: 2px 0 0;
+  flex-shrink: 0;
+  accent-color: var(--rose);
+}
+
+/* Le texte de la tâche est un bouton : un appui ouvre la modification. */
+.tache-texte {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0;
+  border: none;
+  background: none;
+  text-align: left;
+}
+
+.tache-texte small {
+  color: var(--texte-doux);
+}
+
+.tache-note {
+  font-size: 0.9rem;
+  color: var(--texte-doux);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.tache-faite .tache-texte strong {
+  text-decoration: line-through;
+  color: var(--texte-doux);
+}

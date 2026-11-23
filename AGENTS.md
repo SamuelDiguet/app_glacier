@@ -35,6 +35,7 @@ Application de gestion pour un glacier : plannings, stocks et employés.
    - **Statuts** : standard, pâtissier, manager — **cumulables** (un employé peut en avoir plusieurs, au moins un).
    - **Âge** : majeur ou mineur (badge « Mineur » sur la liste).
    - **Notes** : champ libre par employé (disponibilités, remarques).
+4. **To do** : liste de tâches et rendez-vous (titre, date et heure facultatives, notes, case « fait »), rangés en retard / aujourd'hui / à venir / sans date / faites ; les tâches du jour apparaissent sur l'accueil. Règles dans `src/lib/taches.ts`, table `taches`.
 
 ## Stack technique
 

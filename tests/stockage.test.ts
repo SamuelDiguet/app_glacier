@@ -38,7 +38,7 @@ describe('migration des données', () => {
   });
 
   it('laisse intactes les données déjà à jour', () => {
-    const actuelles: DonneesGlacier = { version: VERSION_DONNEES, employes: [], creneaux: [], produits: [], mouvements: [] };
+    const actuelles: DonneesGlacier = { version: VERSION_DONNEES, employes: [], creneaux: [], produits: [], mouvements: [], taches: [] };
     expect(migrerDonnees(actuelles)).toBe(actuelles);
   });
 });

@@ -66,6 +66,17 @@ create table if not exists public.mouvements (
   foreign key (proprietaire, produit_id) references public.produits (proprietaire, id) on delete cascade
 );
 
+create table if not exists public.taches (
+  proprietaire uuid not null default auth.uid() references auth.users (id) on delete cascade,
+  id text not null,
+  titre text not null,
+  date text not null default '',   -- AAAA-MM-JJ, vide si sans date
+  heure text not null default '',  -- HH:MM, vide si sans heure
+  note text not null default '',
+  faite boolean not null default false,
+  primary key (proprietaire, id)
+);
+
 create index if not exists creneaux_employe on public.creneaux (proprietaire, employe_id);
 create index if not exists mouvements_produit on public.mouvements (proprietaire, produit_id);
 
@@ -78,7 +89,7 @@ do $$
 declare
   t text;
 begin
-  foreach t in array array['employes', 'creneaux', 'produits', 'mouvements'] loop
+  foreach t in array array['employes', 'creneaux', 'produits', 'mouvements', 'taches'] loop
     execute format('alter table public.%I enable row level security', t);
     execute format('revoke all on public.%I from anon', t);
     execute format('grant select, insert, update, delete on public.%I to authenticated', t);

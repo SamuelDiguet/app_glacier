@@ -15,7 +15,7 @@ import type { DonneesGlacier } from '../types';
 import { VERSION_DONNEES } from './stockage';
 
 /** Collections de données synchronisées, chacune stockée dans une table du même nom. */
-export const COLLECTIONS = ['employes', 'produits', 'creneaux', 'mouvements'] as const;
+export const COLLECTIONS = ['employes', 'produits', 'creneaux', 'mouvements', 'taches'] as const;
 export type Collection = (typeof COLLECTIONS)[number];
 
 /** Champs dont le nom diffère entre le code et la base (code → base). */
