@@ -7,7 +7,7 @@ import { useDonnees } from '../data/DonneesContext';
 import { Fenetre } from '../components/Fenetre';
 import { BadgePoste, BadgeStatut } from '../components/Badge';
 import { Icone } from '../components/Icone';
-import { LIBELLES_POSTE, POSTES } from '../lib/libelles';
+import { LIBELLES_POSTE, POSTES, STATUTS } from '../lib/libelles';
 import { FormulaireEmploye } from './FormulaireEmploye';
 
 /** Fenêtre ouverte : création (`null`) ou modification d'un employé, ou fermée (`undefined`). */
@@ -76,7 +76,9 @@ export function Employes() {
                     {employe.prenom} {employe.nom}
                   </strong>
                   <div className="badges">
-                    <BadgeStatut statut={employe.statut} />
+                    {STATUTS.filter((s) => employe.statuts.includes(s)).map((s) => (
+                      <BadgeStatut key={s} statut={s} />
+                    ))}
                     {employe.postes.map((p) => (
                       <BadgePoste key={p} poste={p} />
                     ))}

@@ -22,6 +22,19 @@ describe('migration des données', () => {
     expect(v2.produits.map((p) => p.famille)).toEqual(['bac', 'matiere']);
   });
 
+  it('transforme le statut unique des employés en liste de statuts', () => {
+    const v2 = {
+      version: 2,
+      creneaux: [],
+      produits: [],
+      mouvements: [],
+      employes: [{ id: 'e1', prenom: 'Lucas', nom: '', telephone: '', postes: ['production'], statut: 'patissier', actif: true }],
+    } as unknown as DonneesGlacier;
+    const [lucas] = migrerDonnees(v2).employes;
+    expect(lucas.statuts).toEqual(['patissier']);
+    expect('statut' in lucas).toBe(false);
+  });
+
   it('laisse intactes les données déjà à jour', () => {
     const actuelles: DonneesGlacier = { version: VERSION_DONNEES, employes: [], creneaux: [], produits: [], mouvements: [] };
     expect(migrerDonnees(actuelles)).toBe(actuelles);

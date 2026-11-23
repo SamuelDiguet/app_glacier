@@ -5,12 +5,12 @@
  * est le seul à connaître le support de stockage : pour passer plus tard à
  * un back-end ou au stockage natif de Capacitor, il suffira de le remplacer.
  */
-import type { DonneesGlacier, Produit } from '../types';
+import type { DonneesGlacier, Employe, Produit, Statut } from '../types';
 
 const CLE_STOCKAGE = 'gestion-glacier:donnees';
 
 /** Version du format des données, à incrémenter en cas de changement de structure. */
-export const VERSION_DONNEES = 2;
+export const VERSION_DONNEES = 3;
 
 /** Données vides, utilisées au premier lancement ou après réinitialisation. */
 export function donneesVides(): DonneesGlacier {
@@ -29,15 +29,22 @@ export function estDonneesValides(valeur: unknown): valeur is DonneesGlacier {
 
 /**
  * Met à niveau des données d'une ancienne version vers le format actuel.
- * v1 → v2 : ajout de la famille des produits (les produits comptés en bacs
- * deviennent des parfums, les autres des matières premières).
+ * Les étapes s'enchaînent : des données v1 passent par v2 puis v3.
+ * - v1 → v2 : ajout de la famille des produits (les produits comptés en bacs
+ *   deviennent des parfums, les autres des matières premières) ;
+ * - v2 → v3 : le statut unique d'un employé devient une liste de statuts.
  */
 export function migrerDonnees(donnees: DonneesGlacier): DonneesGlacier {
   if (donnees.version >= VERSION_DONNEES) return donnees;
   const produits = donnees.produits.map(
     (p): Produit => ({ ...p, famille: p.famille ?? (p.unite === 'bac' ? 'bac' : 'matiere') }),
   );
-  return { ...donnees, version: VERSION_DONNEES, produits };
+  const employes = donnees.employes.map((e): Employe => {
+    // Ancien format : champ `statut` (une seule valeur).
+    const { statut, ...reste } = e as Employe & { statut?: Statut };
+    return { ...reste, statuts: e.statuts ?? [statut ?? 'standard'] };
+  });
+  return { ...donnees, version: VERSION_DONNEES, produits, employes };
 }
 
 /** Lit les données sauvegardées, ou `null` s'il n'y en a pas (ou si elles sont illisibles). */
