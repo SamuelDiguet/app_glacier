@@ -1,11 +1,13 @@
 /**
  * Structure commune à toutes les pages : barre latérale sur ordinateur,
  * barre d'onglets en bas de l'écran sur smartphone, et barre du haut
- * avec le bouton de thème clair / sombre.
+ * avec le bouton de thème clair / sombre, et bandeau d'état du serveur
+ * en mode connecté.
  */
 import { NavLink, Outlet } from 'react-router-dom';
 import { Icone, type NomIcone } from './Icone';
 import { BoutonTheme } from './BoutonTheme';
+import { useDonnees } from '../data/DonneesContext';
 
 /** Entrées du menu principal. */
 const LIENS: { chemin: string; libelle: string; icone: NomIcone }[] = [
@@ -26,6 +28,23 @@ function Marque() {
   );
 }
 
+/** Bandeau d'état de la liaison avec le serveur (mode connecté) : chargement ou erreur. */
+function BandeauSynchro() {
+  const { synchro } = useDonnees();
+  if (synchro.erreur) {
+    return (
+      <div className="bandeau bandeau-erreur" role="alert">
+        <span>{synchro.erreur}</span>
+        <button className="bouton-icone petit" onClick={synchro.effacerErreur} aria-label="Fermer le message">
+          <Icone nom="fermer" taille={16} />
+        </button>
+      </div>
+    );
+  }
+  if (synchro.chargement) return <div className="bandeau" role="status">Chargement des données…</div>;
+  return null;
+}
+
 export function MiseEnPage() {
   return (
     <div className="app">
@@ -43,6 +62,7 @@ export function MiseEnPage() {
           <Marque />
           <BoutonTheme />
         </div>
+        <BandeauSynchro />
         <Outlet />
       </main>
     </div>

@@ -1,18 +1,24 @@
 /**
- * Page Paramètres : sauvegarde et restauration des données (fichier JSON),
- * données d'exemple et remise à zéro.
+ * Page Paramètres : mon compte (mode connecté), sauvegarde et
+ * restauration des données (fichier JSON), données d'exemple et remise à zéro.
  *
- * Les données étant stockées dans le navigateur, l'export est le moyen
- * de les sauvegarder ou de les transférer vers un autre appareil.
+ * En mode local, les données sont stockées dans le navigateur : l'export
+ * est le moyen de les sauvegarder ou de les transférer vers un autre appareil.
+ * En mode connecté, elles sont sur le serveur, propres à chaque compte.
  */
 import { useRef, useState, type ChangeEvent } from 'react';
 import { useDonnees } from '../data/DonneesContext';
-import { donneesVides, estDonneesValides, migrerDonnees } from '../data/stockage';
+import { useSession } from '../data/SessionContext';
+import { chargerDonnees, donneesVides, estDonneesValides, migrerDonnees } from '../data/stockage';
+import { SectionCompte } from './ParametresCompte';
 import { donneesExemple } from '../data/exemple';
 import { aujourdhui } from '../lib/dates';
 
 export function Parametres() {
   const { donnees, dispatch } = useDonnees();
+  const session = useSession();
+  // Données saisies sur cet appareil avant le passage au mode connecté.
+  const [donneesAppareil] = useState(() => (session ? chargerDonnees() : null));
   const champFichier = useRef<HTMLInputElement>(null);
   const [message, setMessage] = useState('');
 
@@ -55,11 +61,14 @@ export function Parametres() {
         <h1>Paramètres</h1>
       </header>
 
+      {session && <SectionCompte session={session} />}
+
       <div className="carte bloc">
         <h2>Sauvegarde</h2>
         <p>
-          Les données sont enregistrées sur cet appareil, dans le navigateur. Exportez-les régulièrement
-          pour les sauvegarder ou les transférer vers un autre appareil.
+          {session
+            ? 'Les données de votre compte sont enregistrées sur le serveur : vous les retrouvez sur tous vos appareils. Un export permet d’en garder une copie de sécurité.'
+            : 'Les données sont enregistrées sur cet appareil, dans le navigateur. Exportez-les régulièrement pour les sauvegarder ou les transférer vers un autre appareil.'}
         </p>
         <div className="actions">
           <button className="bouton bouton-principal" onClick={exporter}>
@@ -69,6 +78,20 @@ export function Parametres() {
             Importer une sauvegarde
           </button>
           <input ref={champFichier} type="file" accept="application/json,.json" hidden onChange={importer} />
+          {donneesAppareil && (
+            <button
+              className="bouton"
+              onClick={() =>
+                remplacer(
+                  'Remplacer les données du serveur par celles enregistrées sur cet appareil avant la connexion ?',
+                  donneesAppareil,
+                  'Données de cet appareil envoyées sur le serveur.',
+                )
+              }
+            >
+              Envoyer les données de cet appareil
+            </button>
+          )}
         </div>
       </div>
 
@@ -86,7 +109,11 @@ export function Parametres() {
           <button
             className="bouton bouton-danger"
             onClick={() =>
-              remplacer('Effacer définitivement toutes les données ?', donneesVides(), 'Toutes les données ont été effacées.')
+              remplacer(
+                session
+                  ? 'Effacer définitivement toutes les données de votre compte, sur tous vos appareils ?'
+                  : 'Effacer définitivement toutes les données ?',
+                donneesVides(), 'Toutes les données ont été effacées.')
             }
           >
             Tout effacer
